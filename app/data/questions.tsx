@@ -1,23 +1,38 @@
-import { Heart, Coffee, Smartphone, Briefcase, Headphones, Book, Users, Calendar, Home } from "lucide-react"
+import {
+  Heart,
+  Coffee,
+  Smartphone,
+  Briefcase,
+  Headphones,
+  Book,
+  Users,
+  Calendar,
+  Home,
+} from "lucide-react";
+import { ReactElement } from "react";
 
 export interface Question {
-  id: number
-  text: string
-  answers: Answer[]
-  icon: JSX.Element
-  category: "dating" | "social" | "lifestyle" | "career"
+  id: number;
+  text: string;
+  answers: Answer[];
+  icon: ReactElement;
+  category: "dating" | "social" | "lifestyle" | "career";
 }
 
 export interface Answer {
-  text: string
-  score: number
+  text: string;
+  score: number;
+}
+
+function createIcon(Icon: any, className: string = "w-6 h-6"): ReactElement {
+  return <Icon className={className} />;
 }
 
 export const questions: Question[] = [
   {
     id: 1,
     text: "How do you typically meet potential romantic interests?",
-    icon: <Users className="w-6 h-6 text-pink-500" />,
+    icon: createIcon(Users, "w-6 h-6 text-pink-500"),
     category: "social",
     answers: [
       {
@@ -41,7 +56,7 @@ export const questions: Question[] = [
   {
     id: 2,
     text: "What's your ideal first date?",
-    icon: <Coffee className="w-6 h-6 text-brown-500" />,
+    icon: createIcon(Coffee, "w-6 h-6 text-brown-500"),
     category: "dating",
     answers: [
       {
@@ -65,7 +80,7 @@ export const questions: Question[] = [
   {
     id: 3,
     text: "How do you handle your crush's social media activity?",
-    icon: <Smartphone className="w-6 h-6 text-blue-500" />,
+    icon: createIcon(Smartphone, "w-6 h-6 text-blue-500"),
     category: "social",
     answers: [
       {
@@ -89,7 +104,7 @@ export const questions: Question[] = [
   {
     id: 4,
     text: "What's your approach to balancing romance and career/education?",
-    icon: <Briefcase className="w-6 h-6 text-gray-600" />,
+    icon: createIcon(Briefcase, "w-6 h-6 text-gray-600"),
     category: "career",
     answers: [
       {
@@ -113,7 +128,7 @@ export const questions: Question[] = [
   {
     id: 5,
     text: "How do you spend most of your free time?",
-    icon: <Headphones className="w-6 h-6 text-purple-500" />,
+    icon: createIcon(Headphones, "w-6 h-6 text-purple-500"),
     category: "lifestyle",
     answers: [
       {
@@ -137,7 +152,7 @@ export const questions: Question[] = [
   {
     id: 6,
     text: "How do you feel about long-term relationships?",
-    icon: <Heart className="w-6 h-6 text-red-500" />,
+    icon: createIcon(Heart, "w-6 h-6 text-red-500"),
     category: "dating",
     answers: [
       {
@@ -161,7 +176,7 @@ export const questions: Question[] = [
   {
     id: 7,
     text: "How do you handle rejection or disappointment in dating?",
-    icon: <Book className="w-6 h-6 text-green-500" />,
+    icon: createIcon(Book, "w-6 h-6 text-green-500"),
     category: "dating",
     answers: [
       {
@@ -185,7 +200,7 @@ export const questions: Question[] = [
   {
     id: 8,
     text: "What's your idea of a perfect weekend?",
-    icon: <Calendar className="w-6 h-6 text-indigo-500" />,
+    icon: createIcon(Calendar, "w-6 h-6 text-indigo-500"),
     category: "lifestyle",
     answers: [
       {
@@ -209,7 +224,7 @@ export const questions: Question[] = [
   {
     id: 9,
     text: "How do you feel about using dating apps?",
-    icon: <Smartphone className="w-6 h-6 text-pink-500" />,
+    icon: createIcon(Smartphone, "w-6 h-6 text-pink-500"),
     category: "dating",
     answers: [
       {
@@ -233,7 +248,7 @@ export const questions: Question[] = [
   {
     id: 10,
     text: "Where do you see yourself in 5 years regarding relationships?",
-    icon: <Home className="w-6 h-6 text-blue-500" />,
+    icon: createIcon(Home, "w-6 h-6 text-blue-500"),
     category: "lifestyle",
     answers: [
       {
@@ -254,5 +269,4 @@ export const questions: Question[] = [
       },
     ],
   },
-]
-
+];
