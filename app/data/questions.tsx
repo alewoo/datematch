@@ -10,6 +10,7 @@ import {
   Home,
 } from "lucide-react";
 import { ReactElement } from "react";
+import { LucideIcon } from "lucide-react";
 
 export interface Question {
   id: number;
@@ -24,7 +25,10 @@ export interface Answer {
   score: number;
 }
 
-function createIcon(Icon: any, className: string = "w-6 h-6"): ReactElement {
+function createIcon(
+  Icon: LucideIcon,
+  className: string = "w-6 h-6"
+): ReactElement {
   return <Icon className={className} />;
 }
 

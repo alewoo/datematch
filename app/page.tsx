@@ -112,7 +112,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <p className="font-semibold">Valentine's Day Countdown:</p>
+            <p className="font-semibold">Valentine&apos;s Day Countdown:</p>
             {timeLeft ? (
               <p className="font-bold text-2xl text-pink-600">{timeLeft}</p>
             ) : (

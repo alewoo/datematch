@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Sparkles, Lock } from "lucide-react"
-import { Button } from "@/components/ui/button"
+// import { useState } from "react";
+import { Sparkles, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,15 +10,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 export function PremiumFeatures() {
-  const [showPayment, setShowPayment] = useState(false)
+  // const [showPayment, setShowPayment] = useState(false)
 
   const handleUpgrade = () => {
     // Implement payment logic here
-    console.log("Upgrade to premium")
-  }
+    console.log("Upgrade to premium");
+  };
 
   return (
     <Dialog>
@@ -31,7 +31,9 @@ export function PremiumFeatures() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Upgrade to Premium ($2.99)</DialogTitle>
-          <DialogDescription>Get access to exclusive features and deeper insights!</DialogDescription>
+          <DialogDescription>
+            Get access to exclusive features and deeper insights!
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-sm">
@@ -52,6 +54,5 @@ export function PremiumFeatures() {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-
