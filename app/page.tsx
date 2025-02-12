@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
@@ -8,7 +8,7 @@ import { Heart, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function Home() {
+function HomeContent() {
   const [timeLeft, setTimeLeft] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const friendMessage = searchParams.get("invite");
@@ -142,5 +142,13 @@ export default function Home() {
         <Heart className="text-purple-500 h-8 w-8 animate-pulse" />
       </motion.div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

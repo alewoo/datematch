@@ -1,29 +1,37 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { useSearchParams } from "next/navigation"
-import { motion } from "framer-motion"
-import { Share2, Heart, Ghost, Download } from "lucide-react"
-import confetti from "canvas-confetti"
-import { toPng } from "html-to-image"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { PremiumFeatures } from "../components/premium-features"
+import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
+import { Share2, Heart, Ghost, Download } from "lucide-react";
+import confetti from "canvas-confetti";
+import { toPng } from "html-to-image";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { PremiumFeatures } from "../components/premium-features";
+import { Suspense } from "react";
 
 interface ResultCategory {
-  range: [number, number]
-  title: string
-  message: string
-  icon: JSX.Element
-  color: string
+  range: [number, number];
+  title: string;
+  message: string;
+  icon: JSX.Element;
+  color: string;
 }
 
 const resultCategories: ResultCategory[] = [
   {
     range: [80, 100],
     title: "SINGLE FOREVER",
-    message: "You're embracing the single life like a pro! Your independence game is strong.",
+    message:
+      "You're embracing the single life like a pro! Your independence game is strong.",
     icon: <Ghost className="w-12 h-12" />,
     color: "bg-purple-500",
   },
@@ -37,7 +45,8 @@ const resultCategories: ResultCategory[] = [
   {
     range: [40, 59],
     title: "READY TO MINGLE",
-    message: "You're putting yourself out there. Love might be just around the corner!",
+    message:
+      "You're putting yourself out there. Love might be just around the corner!",
     icon: <Heart className="w-12 h-12 text-red-500" />,
     color: "bg-red-400",
   },
@@ -48,34 +57,35 @@ const resultCategories: ResultCategory[] = [
     icon: <Heart className="w-12 h-12 text-red-500" />,
     color: "bg-red-600",
   },
-]
+];
 
-export default function Results() {
-  const searchParams = useSearchParams()
-  const score = Number.parseInt(searchParams.get("score") || "0")
-  const [customMessage, setCustomMessage] = useState("")
-  const [inviteLink, setInviteLink] = useState("")
-  const resultCardRef = useRef<HTMLDivElement>(null)
+function ResultsContent() {
+  const searchParams = useSearchParams();
+  const score = Number.parseInt(searchParams.get("score") || "0");
+  const [customMessage, setCustomMessage] = useState("");
+  const [inviteLink, setInviteLink] = useState("");
+  const resultCardRef = useRef<HTMLDivElement>(null);
 
   const getResultCategory = (score: number) => {
     return (
-      resultCategories.find((category) => score >= category.range[0] && score <= category.range[1]) ||
-      resultCategories[0]
-    )
-  }
+      resultCategories.find(
+        (category) => score >= category.range[0] && score <= category.range[1]
+      ) || resultCategories[0]
+    );
+  };
 
-  const result = getResultCategory(score)
+  const result = getResultCategory(score);
 
   const generateInviteLink = () => {
-    const baseUrl = window.location.origin
-    const encodedMessage = encodeURIComponent(customMessage)
-    const link = `${baseUrl}?invite=${encodedMessage}`
-    setInviteLink(link)
-  }
+    const baseUrl = window.location.origin;
+    const encodedMessage = encodeURIComponent(customMessage);
+    const link = `${baseUrl}?invite=${encodedMessage}`;
+    setInviteLink(link);
+  };
 
   const shareResult = async () => {
-    const shareText = `I scored ${score}% on the "Will You Stay Single Forever?" quiz and got "${result.title}"! Take it yourself:`
-    const shareUrl = window.location.origin
+    const shareText = `I scored ${score}% on the "Will You Stay Single Forever?" quiz and got "${result.title}"! Take it yourself:`;
+    const shareUrl = window.location.origin;
 
     if (navigator.share) {
       try {
@@ -83,38 +93,38 @@ export default function Results() {
           title: "My Single Score",
           text: shareText,
           url: shareUrl,
-        })
+        });
       } catch (err) {
-        console.error("Error sharing:", err)
+        console.error("Error sharing:", err);
       }
     } else {
       // Fallback to copying to clipboard
-      navigator.clipboard.writeText(`${shareText} ${shareUrl}`)
-      alert("Copied to clipboard!")
+      navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+      alert("Copied to clipboard!");
     }
-  }
+  };
 
   const downloadResultCard = async () => {
     if (resultCardRef.current) {
-      const dataUrl = await toPng(resultCardRef.current, { quality: 0.95 })
-      const link = document.createElement("a")
-      link.download = "my-single-score.png"
-      link.href = dataUrl
-      link.click()
+      const dataUrl = await toPng(resultCardRef.current, { quality: 0.95 });
+      const link = document.createElement("a");
+      link.download = "my-single-score.png";
+      link.href = dataUrl;
+      link.click();
     }
-  }
+  };
 
   const launchConfetti = () => {
     confetti({
       particleCount: 100,
       spread: 70,
       origin: { y: 0.6 },
-    })
-  }
+    });
+  };
 
   useEffect(() => {
-    launchConfetti()
-  }, []) // Removed launchConfetti from the dependency array
+    launchConfetti();
+  }, []); // Removed launchConfetti from the dependency array
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-red-100 to-purple-100 py-12 px-4">
@@ -124,7 +134,10 @@ export default function Results() {
         transition={{ duration: 0.5 }}
         className="max-w-2xl mx-auto"
       >
-        <div ref={resultCardRef} className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div
+          ref={resultCardRef}
+          className="bg-white rounded-2xl shadow-xl overflow-hidden"
+        >
           {/* Score Header */}
           <div className={`${result.color} p-8 text-white text-center`}>
             <motion.div
@@ -141,7 +154,9 @@ export default function Results() {
 
           {/* Result Content */}
           <div className="p-8">
-            <p className="text-xl text-center mb-6 text-gray-700">{result.message}</p>
+            <p className="text-xl text-center mb-6 text-gray-700">
+              {result.message}
+            </p>
 
             <div className="flex justify-center space-x-4">
               <Button onClick={shareResult}>
@@ -157,7 +172,11 @@ export default function Results() {
             {/* Custom Invite Dialog */}
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="outline" className="w-full mt-4" onClick={launchConfetti}>
+                <Button
+                  variant="outline"
+                  className="w-full mt-4"
+                  onClick={launchConfetti}
+                >
                   Challenge a Friend
                 </Button>
               </DialogTrigger>
@@ -167,7 +186,9 @@ export default function Results() {
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-medium">Custom Message</label>
+                    <label className="text-sm font-medium">
+                      Custom Message
+                    </label>
                     <Input
                       placeholder="Hey bestie, I bet you're more single than me!"
                       value={customMessage}
@@ -182,8 +203,8 @@ export default function Results() {
                         variant="outline"
                         className="mt-2 w-full"
                         onClick={() => {
-                          navigator.clipboard.writeText(inviteLink)
-                          alert("Link copied!")
+                          navigator.clipboard.writeText(inviteLink);
+                          alert("Link copied!");
                         }}
                       >
                         Copy Link
@@ -198,6 +219,13 @@ export default function Results() {
         </div>
       </motion.div>
     </div>
-  )
+  );
 }
 
+export default function Results() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResultsContent />
+    </Suspense>
+  );
+}
