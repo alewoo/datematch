@@ -88,7 +88,7 @@ function HomeContent() {
               Only 5% of quiz takers are actually dateable. Are you one of them?
             </p>
             <p className="text-lg text-gray-600">
-              Join <span className="text-pink-500 font-bold">96+</span> others
+              Join <span className="text-pink-500 font-bold">250+</span> others
               who discovered their fate
             </p>
           </motion.div>
