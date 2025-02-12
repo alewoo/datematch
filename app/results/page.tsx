@@ -29,33 +29,33 @@ interface ResultCategory {
 const resultCategories: ResultCategory[] = [
   {
     range: [80, 100],
-    title: "SINGLE FOREVER",
-    message:
-      "You're embracing the single life like a pro! Your independence game is strong.",
-    icon: <Ghost className="w-12 h-12" />,
-    color: "bg-purple-500",
+    title: "LOVE MAGNET",
+    message: "You're a natural at relationships. Cupid's got nothing on you!",
+    icon: <Heart className="w-12 h-12" />,
+    color: "bg-red-500",
   },
   {
     range: [60, 79],
-    title: "SINGLE... FOR NOW",
-    message: "You're open to love, but not in a rush. Keep doing you!",
+    title: "READY TO MINGLE",
+    message:
+      "You're putting yourself out there. Love might be just around the corner!",
     icon: <Heart className="w-12 h-12" />,
     color: "bg-pink-500",
   },
   {
     range: [40, 59],
-    title: "READY TO MINGLE",
-    message:
-      "You're putting yourself out there. Love might be just around the corner!",
-    icon: <Heart className="w-12 h-12 text-red-500" />,
-    color: "bg-red-400",
+    title: "SINGLE... FOR NOW",
+    message: "You're open to love, but not in a rush. Keep doing you!",
+    icon: <Ghost className="w-12 h-12" />,
+    color: "bg-purple-400",
   },
   {
     range: [0, 39],
-    title: "LOVE MAGNET",
-    message: "You're a natural at relationships. Cupid's got nothing on you!",
-    icon: <Heart className="w-12 h-12 text-red-500" />,
-    color: "bg-red-600",
+    title: "SINGLE FOREVER",
+    message:
+      "You're embracing the single life like a pro! Your independence game is strong.",
+    icon: <Ghost className="w-12 h-12" />,
+    color: "bg-purple-600",
   },
 ];
 

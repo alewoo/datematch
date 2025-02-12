@@ -41,19 +41,19 @@ export const questions: Question[] = [
     answers: [
       {
         text: "Through mutual friends or social events",
-        score: 30,
-      },
-      {
-        text: "Dating apps are my go-to",
-        score: 50,
-      },
-      {
-        text: "I don't actively seek out romantic interests",
         score: 80,
       },
       {
+        text: "Dating apps are my go-to",
+        score: 60,
+      },
+      {
+        text: "I don't actively seek out romantic interests",
+        score: 20,
+      },
+      {
         text: "In class or at work",
-        score: 40,
+        score: 70,
       },
     ],
   },
