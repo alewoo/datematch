@@ -37,6 +37,12 @@ interface ResultCategory {
   color: string;
 }
 
+interface TraitLevel {
+  threshold: number;
+  label: string;
+  color: string;
+}
+
 const resultCategories: ResultCategory[] = [
   {
     range: [80, 100],
@@ -161,7 +167,8 @@ function ResultsContent() {
   };
 
   const shareResult = async () => {
-    const shareText = `I got "${title}" on the Single Forever quiz! My top traits are ${strengths.join(
+    const { strengths } = getOverallAnalysis();
+    const shareText = `I got "${title}" on the DateMatch quiz! My top traits are ${strengths.join(
       ", "
     )}. Take it yourself:`;
     const shareUrl = window.location.origin;
@@ -169,7 +176,7 @@ function ResultsContent() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "My Single Score",
+          title: "My DateMatch Results",
           text: shareText,
           url: shareUrl,
         });
@@ -183,41 +190,38 @@ function ResultsContent() {
     if (!resultCardRef.current) return;
 
     try {
-      resultCardRef.current.classList.add("rendering");
+      // Make the card temporarily visible for capture
+      resultCardRef.current.style.visibility = "visible";
+      resultCardRef.current.style.position = "fixed";
+      resultCardRef.current.style.top = "0";
+      resultCardRef.current.style.left = "0";
 
-      await new Promise((resolve) => setTimeout(resolve, 100)); // Give time for rendering
+      // Wait for any animations/renders to complete
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       const dataUrl = await toPng(resultCardRef.current, {
         cacheBust: true,
         quality: 1.0,
         pixelRatio: 2,
-        backgroundColor: "#ffffff",
+        width: 1200,
+        height: 630,
       });
 
+      // Hide the card again
+      resultCardRef.current.style.visibility = "hidden";
+      resultCardRef.current.style.position = "absolute";
+
+      // Download the image
       const link = document.createElement("a");
       link.download = `datematch-${title
         .toLowerCase()
         .replace(/\s+/g, "-")}.png`;
       link.href = dataUrl;
       link.click();
-
-      resultCardRef.current.classList.remove("rendering");
     } catch (err) {
       console.error("Error generating image:", err);
     }
   };
-
-  // const launchConfetti = () => {
-  //   confetti({
-  //     particleCount: 100,
-  //     spread: 70,
-  //     origin: { y: 0.6 },
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   launchConfetti();
-  // }, []); // Removed launchConfetti from the dependency array
 
   useEffect(() => {
     if (profile) {
@@ -233,17 +237,15 @@ function ResultsContent() {
       .slice(0, 2)
       .map(([trait]) => trait);
 
-    // Create personality archetypes based on top traits
-    const archetypes = {
+    const archetypes: Record<string, string> = {
       "socialStyle-emotionalReadiness": "The Social Butterfly 🦋",
       "socialStyle-dateStyle": "The Campus Connector 🌟",
       "emotionalReadiness-commitment": "The Relationship Ready 💝",
       "career-independence": "The Ambitious Independent 💼",
       "communication-flexibility": "The Smooth Operator 🎭",
-      // Add more combinations...
     };
 
-    const key = dominantTraits.sort().join("-");
+    const key = dominantTraits.sort().join("-") as keyof typeof archetypes;
     return archetypes[key] || "The Balanced Explorer ⭐";
   };
 
@@ -265,7 +267,7 @@ function ResultsContent() {
   };
 
   const getTraitLevel = (trait: string, score: number) => {
-    const levels = {
+    const levels: Record<string, TraitLevel[]> = {
       socialStyle: [
         { threshold: 8, label: "Highly Social", color: "text-rose-500" },
         { threshold: 6, label: "Moderately Social", color: "text-rose-400" },
@@ -324,11 +326,11 @@ function ResultsContent() {
         { threshold: 2, label: "Structured", color: "text-purple-500" },
         { threshold: 0, label: "Clear Boundaries", color: "text-purple-600" },
       ],
-    };
+    } as const;
 
-    const traitLevels = levels[trait] || levels.default;
+    const traitLevels = levels[trait] || levels.socialStyle;
     return (
-      traitLevels.find((level) => score >= level.threshold) ||
+      traitLevels.find((level: TraitLevel) => score >= level.threshold) ||
       traitLevels[traitLevels.length - 1]
     );
   };
@@ -337,97 +339,96 @@ function ResultsContent() {
     const strengths = [];
     const growthAreas = [];
 
-    // Social Style
-    if (profile.socialStyle > 6) {
+    // More specific social style strengths
+    if (profile.socialStyle > 7) {
+      strengths.push(
+        "Exceptional at building and maintaining social connections"
+      );
+    } else if (profile.socialStyle > 5) {
       strengths.push("Natural at building social connections");
-    } else if (profile.socialStyle > 4) {
-      strengths.push("Good at maintaining meaningful relationships");
     } else if (profile.socialStyle < 4) {
-      strengths.push("Skilled at deep one-on-one connections");
+      strengths.push(
+        "Great at forming deep, meaningful one-on-one connections"
+      );
     }
 
-    // Emotional Readiness
-    if (profile.emotionalReadiness > 6) {
+    // Emotional readiness insights
+    if (profile.emotionalReadiness > 7) {
+      strengths.push("Highly self-aware and emotionally mature");
+    } else if (profile.emotionalReadiness > 5) {
       strengths.push("Emotionally mature and self-aware");
     } else if (profile.emotionalReadiness < 4) {
-      growthAreas.push("Take time to understand your emotional needs");
+      growthAreas.push("Focus on understanding your emotional needs better");
     }
 
-    // Date Style
-    if (profile.dateStyle > 6) {
+    // Dating style insights
+    if (profile.dateStyle > 7) {
+      strengths.push("Very confident and clear about relationship goals");
+    } else if (profile.dateStyle > 5) {
       strengths.push("Confident and clear about what you want");
-    } else if (profile.dateStyle > 4) {
-      strengths.push("Balanced approach to dating");
-    } else {
-      strengths.push("Thoughtful and intentional about dating");
+    } else if (profile.dateStyle < 4) {
+      strengths.push("Thoughtful and intentional in your approach to dating");
     }
 
-    // Communication
-    if (profile.communication > 6) {
-      strengths.push("Strong communicator who expresses feelings clearly");
+    // Communication insights
+    if (profile.communication > 7) {
+      strengths.push("Excellent at expressing feelings and needs clearly");
+    } else if (profile.communication > 5) {
+      strengths.push("Strong communicator who expresses feelings well");
     } else if (profile.communication < 4) {
-      growthAreas.push("Practice expressing your feelings more openly");
+      growthAreas.push("Work on expressing your feelings more openly");
     }
 
-    // Independence
-    if (profile.independence > 6) {
-      strengths.push("Strong sense of self and healthy boundaries");
-    } else if (profile.independence > 4) {
+    // Independence insights
+    if (profile.independence > 7) {
+      strengths.push("Strongly independent with healthy boundaries");
+    } else if (profile.independence > 5) {
       strengths.push("Good balance of independence and connection");
+    } else if (profile.independence < 4) {
+      growthAreas.push("Find balance between independence and connection");
     }
 
-    // Commitment
-    if (profile.commitment > 6) {
-      strengths.push("Loyal and dedicated in relationships");
+    // Commitment insights
+    if (profile.commitment > 7) {
+      strengths.push("Deeply committed and loyal in relationships");
     } else if (profile.commitment < 4) {
-      strengths.push("Values personal freedom and authenticity");
+      strengths.push("Values personal growth and authenticity");
     }
 
-    // Career Focus
-    if (profile.career > 6) {
-      strengths.push("Clear goals and ambitions");
-    } else if (profile.career > 4) {
-      strengths.push("Good work-life balance awareness");
+    // Career focus insights
+    if (profile.career > 7) {
+      strengths.push("Clear ambitions with strong life goals");
+    } else if (profile.career > 5) {
+      strengths.push("Good balance of career and personal life");
     }
 
-    // Flexibility
-    if (profile.flexibility > 6) {
-      strengths.push("Adaptable and open to new experiences");
+    // Flexibility insights
+    if (profile.flexibility > 7) {
+      strengths.push("Highly adaptable in relationship dynamics");
     } else if (profile.flexibility < 4) {
-      growthAreas.push("Consider being more open to different perspectives");
+      growthAreas.push("Practice being more open to different perspectives");
     }
 
-    // Ensure we have growth areas
+    // Add personalized growth areas if needed
     if (growthAreas.length < 2) {
-      if (profile.communication < 8) {
-        growthAreas.push("Practice expressing your feelings more openly");
-      }
-      if (profile.emotionalReadiness < 8) {
-        growthAreas.push("Take time to understand your emotional needs better");
-      }
-      if (profile.flexibility < 8) {
-        growthAreas.push("Consider being more open to different perspectives");
-      }
-      if (profile.socialStyle < 8) {
+      if (profile.socialStyle < 7) {
         growthAreas.push(
           "Explore more social connections and group activities"
         );
       }
-      if (profile.dateStyle < 8) {
+      if (profile.dateStyle < 7) {
         growthAreas.push("Try new approaches to meeting potential partners");
+      }
+      if (profile.flexibility < 7) {
+        growthAreas.push(
+          "Consider being more flexible in your dating approach"
+        );
       }
     }
 
-    // Always ensure at least one growth area
-    if (growthAreas.length === 0) {
-      growthAreas.push(
-        "Continue developing self-awareness and relationship skills"
-      );
-    }
-
     return {
-      strengths: [...new Set(strengths)].slice(0, 4), // Limit to 4 unique strengths
-      growthAreas: [...new Set(growthAreas)].slice(0, 3), // Limit to 3 unique growth areas
+      strengths: Array.from(new Set(strengths)).slice(0, 4), // Limit to 4 unique strengths
+      growthAreas: Array.from(new Set(growthAreas)).slice(0, 3), // Limit to 3 unique growth areas
     };
   };
 
@@ -435,25 +436,52 @@ function ResultsContent() {
     const bestMatches = [];
     const challengingMatches = [];
 
-    // Based on their profile, determine compatibility
-    if (profile.socialStyle > 6) {
-      bestMatches.push("Outgoing individuals who enjoy social scenes");
-    } else {
-      bestMatches.push("Someone who values intimate, one-on-one time");
+    // Social style compatibility
+    if (profile.socialStyle > 7) {
+      bestMatches.push("Socially active people who enjoy group activities");
+    } else if (profile.socialStyle < 4) {
+      bestMatches.push("People who value deep, meaningful conversations");
     }
 
-    if (profile.independence > 6) {
-      challengingMatches.push("People who need constant attention");
+    // Independence compatibility
+    if (profile.independence > 7) {
       bestMatches.push("Independent individuals who respect personal space");
+      challengingMatches.push(
+        "People who need constant attention or validation"
+      );
+    } else if (profile.independence < 4) {
+      bestMatches.push("People who value close, interdependent relationships");
+      challengingMatches.push(
+        "Extremely independent or emotionally distant people"
+      );
     }
 
-    if (profile.commitment > 6) {
+    // Communication style
+    if (profile.communication > 7) {
+      bestMatches.push("Open communicators who share their feelings readily");
+    } else if (profile.communication < 4) {
+      challengingMatches.push("Overly direct or confrontational communicators");
+    }
+
+    // Commitment level
+    if (profile.commitment > 7) {
+      bestMatches.push("People seeking long-term, committed relationships");
       challengingMatches.push("Those looking for casual connections");
-    } else {
-      challengingMatches.push("People seeking immediate serious commitment");
+    } else if (profile.commitment < 4) {
+      bestMatches.push("People who take relationships day by day");
+      challengingMatches.push("Those pushing for immediate serious commitment");
     }
 
-    return { bestMatches, challengingMatches };
+    // Career focus
+    if (profile.career > 7) {
+      bestMatches.push("Ambitious individuals with clear career goals");
+      challengingMatches.push("People without professional aspirations");
+    }
+
+    return {
+      bestMatches: Array.from(new Set(bestMatches)).slice(0, 2), // Limit to 2 unique matches
+      challengingMatches: Array.from(new Set(challengingMatches)).slice(0, 2), // Limit to 2 unique challenges
+    };
   };
 
   // Add this helper function to generate a personalized title and description
@@ -550,84 +578,75 @@ function ResultsContent() {
 
   const gradientId = "colorGradient";
 
-  const DownloadCard = () => {
-    const chartData = Object.entries(profile).map(([key, value]) => ({
-      trait: key
-        .replace(/([A-Z])/g, " $1")
-        .toLowerCase()
-        .replace(/^\w/, (c) => c.toUpperCase()),
-      value: value,
-    }));
+  const DownloadCard = () => (
+    <div
+      ref={resultCardRef}
+      className="fixed left-0 top-0 w-[1200px] h-[630px]"
+      style={{
+        visibility: "hidden",
+        position: "fixed",
+        backgroundColor: "#fff",
+        padding: "40px",
+        zIndex: -1,
+      }}
+    >
+      <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-3xl p-8 h-full flex flex-col items-center justify-between shadow-lg">
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <div className="text-6xl mb-2">✨</div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 text-transparent bg-clip-text">
+            {title}
+          </h1>
+          <p className="text-gray-600 text-xl max-w-2xl">{description}</p>
+        </div>
 
-    return (
-      <div
-        ref={resultCardRef}
-        className="fixed left-[-9999px] top-0"
-        style={{
-          width: "1200px",
-          height: "630px",
-          backgroundColor: "#fff",
-          padding: "40px",
-        }}
-      >
-        <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-3xl p-8 h-full flex flex-col items-center justify-between shadow-lg">
-          {/* Header */}
-          <div className="text-center space-y-4">
-            <div className="text-6xl mb-2">✨</div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 text-transparent bg-clip-text">
-              {title}
-            </h1>
-            <p className="text-gray-600 text-xl max-w-2xl">{description}</p>
+        {/* Radar Chart */}
+        <div className="w-[400px] h-[400px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+              <PolarGrid stroke="#e5e7eb" />
+              <PolarAngleAxis
+                dataKey="trait"
+                tick={{ fill: "#6b7280", fontSize: 14 }}
+              />
+              <Radar
+                name="Your Profile"
+                dataKey="value"
+                stroke="#ec4899"
+                fill="#ec4899"
+                fillOpacity={0.4}
+              />
+            </RadarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Top Traits */}
+        <div className="space-y-4">
+          <div className="flex gap-4">
+            {Object.entries(profile)
+              .sort(([, a], [, b]) => b - a)
+              .slice(0, 3)
+              .map(([trait]) => (
+                <div
+                  key={trait}
+                  className="bg-white rounded-full px-4 py-2 shadow-sm border border-pink-100"
+                >
+                  <span className="mr-2">{getTraitEmoji(trait)}</span>
+                  <span className="text-gray-700">
+                    {trait.replace(/([A-Z])/g, " $1").toLowerCase()}
+                  </span>
+                </div>
+              ))}
           </div>
-
-          {/* Radar Chart */}
-          <div className="w-[400px] h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-                <PolarGrid stroke="#e5e7eb" />
-                <PolarAngleAxis
-                  dataKey="trait"
-                  tick={{ fill: "#6b7280", fontSize: 14 }}
-                />
-                <Radar
-                  name="Your Profile"
-                  dataKey="value"
-                  stroke="#ec4899"
-                  fill="#ec4899"
-                  fillOpacity={0.4}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Top Traits */}
-          <div className="space-y-4">
-            <div className="flex gap-4">
-              {Object.entries(profile)
-                .sort(([, a], [, b]) => b - a)
-                .slice(0, 3)
-                .map(([trait]) => (
-                  <div
-                    key={trait}
-                    className="bg-white rounded-full px-4 py-2 shadow-sm border border-pink-100"
-                  >
-                    <span className="mr-2">{getTraitEmoji(trait)}</span>
-                    <span className="text-gray-700">
-                      {trait.replace(/([A-Z])/g, " $1").toLowerCase()}
-                    </span>
-                  </div>
-                ))}
-            </div>
-            <div className="flex items-center justify-center gap-2 text-gray-500">
-              <Heart className="w-4 h-4 text-pink-400" />
-              <span className="font-medium">datematch.vercel.app</span>
-              <Heart className="w-4 h-4 text-purple-400" />
-            </div>
+          <div className="flex items-center justify-center gap-2 text-gray-500">
+            <Heart className="w-4 h-4 text-pink-400" />
+            <span className="font-medium">datematch.vercel.app</span>
+            <Heart className="w-4 h-4 text-purple-400" />
           </div>
         </div>
       </div>
-    );
-  };
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-red-100 to-purple-100 py-12 px-4">
@@ -668,7 +687,7 @@ function ResultsContent() {
           className="bg-white rounded-2xl shadow-xl p-6 mb-6"
         >
           <h2 className="text-2xl font-bold mb-4 flex items-center">
-            <span className="bg-pink-100 p-2 rounded-lg mr-2">��</span>
+            <span className="bg-pink-100 p-2 rounded-lg mr-2">💝</span>
             Your Love Profile
           </h2>
           <div className="w-full h-[300px]">
@@ -714,7 +733,7 @@ function ResultsContent() {
               key={trait}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl p-4 text-center relative group"
+              className="bg-white rounded-xl p-4 text-center relative group shadow-xl backdrop-blur-sm"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.2 }}
             >
