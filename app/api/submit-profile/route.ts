@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { sendConfirmationEmail } from "@/lib/email";
 // import { UserProfile } from "@/app/data/types";
 
 export async function POST(request: Request) {
   try {
     const data = await request.json();
+    console.log("API Key present:", !!process.env.RESEND_API_KEY); // Check if API key exists
 
     // Insert the profile into Supabase
     const { data: profile, error } = await supabase
@@ -39,10 +41,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
-
-async function sendConfirmationEmail(email: string) {
-  // Implement email sending logic here
-  // You could use services like SendGrid, AWS SES, or Resend
-  console.log("Sending confirmation email to:", email);
 }
