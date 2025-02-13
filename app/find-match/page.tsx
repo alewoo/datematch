@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +31,14 @@ const GEORGIA_UNIVERSITIES = [
 ] as const;
 
 export default function FindMatch() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <FindMatchContent />
+    </Suspense>
+  );
+}
+
+function FindMatchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -227,7 +235,7 @@ export default function FindMatch() {
                   setFormData({ ...formData, email: e.target.value })
                 }
                 className="w-full"
-                placeholder="your.email@university.edu"
+                placeholder="youremail@mail.com"
               />
               <p className="text-sm text-gray-500 mt-1">
                 We'll use this to notify you about matches

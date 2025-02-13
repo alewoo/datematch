@@ -3,19 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { Share2, Heart, Ghost, Download } from "lucide-react";
-import confetti from "canvas-confetti";
+import { Share2, Heart, Download } from "lucide-react";
+
 import { toPng } from "html-to-image";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { PremiumFeatures } from "../components/premium-features";
 import { Suspense } from "react";
 import {
   RadarChart,
@@ -29,100 +20,21 @@ import { PersonalityTraits } from "@/app/data/types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-interface ResultCategory {
-  range: [number, number];
-  title: string;
-  message: string;
-  icon: JSX.Element;
-  color: string;
-}
-
 interface TraitLevel {
   threshold: number;
   label: string;
   color: string;
 }
 
-const resultCategories: ResultCategory[] = [
-  {
-    range: [80, 100],
-    title: "LOVE MAGNET",
-    message: "You're a natural at relationships. Cupid's got nothing on you!",
-    icon: <Heart className="w-12 h-12" />,
-    color: "bg-gradient-to-r from-rose-400 to-pink-500",
-  },
-  {
-    range: [60, 79],
-    title: "READY TO MINGLE",
-    message:
-      "You're putting yourself out there. Love might be just around the corner!",
-    icon: <Heart className="w-12 h-12" />,
-    color: "bg-gradient-to-r from-pink-400 to-purple-400",
-  },
-  {
-    range: [40, 59],
-    title: "SINGLE... FOR NOW",
-    message: "You're open to love, but not in a rush. Keep doing you!",
-    icon: <Ghost className="w-12 h-12" />,
-    color: "bg-gradient-to-r from-purple-400 to-violet-400",
-  },
-  {
-    range: [0, 39],
-    title: "SINGLE FOREVER",
-    message:
-      "You're embracing the single life like a pro! Your independence game is strong.",
-    icon: <Ghost className="w-12 h-12" />,
-    color: "bg-gradient-to-r from-violet-400 to-indigo-400",
-  },
-];
-
 function ResultsContent() {
   const searchParams = useSearchParams();
   const profile: PersonalityTraits = JSON.parse(
     decodeURIComponent(searchParams.get("profile") || "{}")
   );
-  const [customMessage, setCustomMessage] = useState("");
-  const [inviteLink, setInviteLink] = useState("");
   const resultCardRef = useRef<HTMLDivElement>(null);
-  const [personalityType, setPersonalityType] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const router = useRouter();
-
-  const traitDescriptions = {
-    socialStyle: {
-      high: "You're naturally social and thrive in group settings",
-      low: "You prefer more intimate, one-on-one interactions",
-    },
-    emotionalReadiness: {
-      high: "You're emotionally prepared for a serious relationship",
-      low: "You might want to focus on personal growth before serious dating",
-    },
-    dateStyle: {
-      high: "You have a modern, proactive approach to dating",
-      low: "You prefer traditional, organic ways of meeting people",
-    },
-    commitment: {
-      high: "You value stable, long-term relationships",
-      low: "You prefer keeping your options open",
-    },
-    communication: {
-      high: "You're an excellent communicator in relationships",
-      low: "You might want to work on expressing yourself more openly",
-    },
-    independence: {
-      high: "You strongly value your autonomy",
-      low: "You're comfortable with interdependence",
-    },
-    career: {
-      high: "Your career/education is a top priority",
-      low: "You balance career with other life aspects",
-    },
-    flexibility: {
-      high: "You're adaptable in relationship situations",
-      low: "You have clear preferences and boundaries",
-    },
-  };
 
   const chartData = Object.entries(profile).map(([key, value]) => ({
     trait: key
@@ -131,13 +43,6 @@ function ResultsContent() {
       .replace(/^\w/, (c) => c.toUpperCase()),
     value: value,
   }));
-
-  const getAnalysis = (trait: keyof PersonalityTraits) => {
-    const score = profile[trait];
-    return score > 6
-      ? traitDescriptions[trait].high
-      : traitDescriptions[trait].low;
-  };
 
   const getOverallAnalysis = () => {
     const traits = Object.entries(profile);
@@ -157,18 +62,9 @@ function ResultsContent() {
     };
   };
 
-  const { strengths, areasForGrowth } = getOverallAnalysis();
-
-  const generateInviteLink = () => {
-    const baseUrl = window.location.origin;
-    const encodedMessage = encodeURIComponent(customMessage);
-    const link = `${baseUrl}?invite=${encodedMessage}`;
-    setInviteLink(link);
-  };
-
   const shareResult = async () => {
-    const { strengths } = getOverallAnalysis();
-    const shareText = `I got "${title}" on the DateMatch quiz! My top traits are ${strengths.join(
+    const { strengths: topStrengths } = getOverallAnalysis();
+    const shareText = `I got "${title}" on the DateMatch quiz! My top traits are ${topStrengths.join(
       ", "
     )}. Take it yourself:`;
     const shareUrl = window.location.origin;
@@ -230,41 +126,6 @@ function ResultsContent() {
       setDescription(insight.description);
     }
   }, [profile]);
-
-  const getPersonalityType = () => {
-    const dominantTraits = Object.entries(profile)
-      .sort(([, a], [, b]) => b - a)
-      .slice(0, 2)
-      .map(([trait]) => trait);
-
-    const archetypes: Record<string, string> = {
-      "socialStyle-emotionalReadiness": "The Social Butterfly 🦋",
-      "socialStyle-dateStyle": "The Campus Connector 🌟",
-      "emotionalReadiness-commitment": "The Relationship Ready 💝",
-      "career-independence": "The Ambitious Independent 💼",
-      "communication-flexibility": "The Smooth Operator 🎭",
-    };
-
-    const key = dominantTraits.sort().join("-") as keyof typeof archetypes;
-    return archetypes[key] || "The Balanced Explorer ⭐";
-  };
-
-  const getCompatibilityInsights = () => {
-    return {
-      bestMatch:
-        profile.socialStyle > 7
-          ? "Someone who enjoys campus social life but respects your independence"
-          : "Someone who values deep one-on-one connections",
-      whereToMeet:
-        profile.dateStyle > 7
-          ? ["Campus coffee shops", "Student organizations", "Social events"]
-          : ["Study groups", "Through mutual friends", "Hobby-based clubs"],
-      potentialChallenges:
-        profile.commitment > 7
-          ? "Balancing relationship time with academic priorities"
-          : "Opening up to new connections while maintaining independence",
-    };
-  };
 
   const getTraitLevel = (trait: string, score: number) => {
     const levels: Record<string, TraitLevel[]> = {
@@ -728,7 +589,7 @@ function ResultsContent() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-4"
         >
-          {Object.entries(profile).map(([trait, score], index) => (
+          {Object.entries(profile).map(([trait, score]) => (
             <motion.div
               key={trait}
               initial={{ opacity: 0, y: 20 }}
