@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { Heart, ArrowRight } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -40,6 +40,20 @@ function HomeContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-red-100 to-purple-100 flex flex-col items-center justify-center p-4">
+      <motion.div
+        className="absolute top-4 left-4 z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        <Link href="/" className="flex items-center space-x-2">
+          <Heart className="text-pink-500 h-6 w-6" />
+          <span className="font-bold text-xl bg-gradient-to-r from-pink-500 to-purple-600 text-transparent bg-clip-text">
+            DateMatch
+          </span>
+        </Link>
+      </motion.div>
+
       {isLoading ? (
         <motion.div
           initial={{ opacity: 0 }}
@@ -77,7 +91,8 @@ function HomeContent() {
           >
             Will You Stay Single Forever?
           </motion.h1>
-          {/* Enhanced Subtext */}
+
+          {/* Enhanced Value Proposition */}
           <motion.div
             className="space-y-4"
             initial={{ opacity: 0, y: 20 }}
@@ -85,13 +100,17 @@ function HomeContent() {
             transition={{ delay: 0.2 }}
           >
             <p className="text-xl md:text-2xl text-gray-700 max-w-2xl mx-auto">
-              Only 5% of quiz takers are actually dateable. Are you one of them?
+              Get your personalized dating analysis & find your perfect match!
+              💘
             </p>
-            <p className="text-lg text-gray-600">
-              Join <span className="text-pink-500 font-bold">96+</span> others
-              who discovered their fate
+            <p className="text-lg text-gray-600 space-y-2">
+              <span className="block">
+                Join <span className="text-pink-500 font-bold">250+</span>{" "}
+                others who discovered their fate
+              </span>
             </p>
           </motion.div>
+
           <motion.div
             className="mt-8"
             initial={{ opacity: 0, y: 20 }}
@@ -100,8 +119,7 @@ function HomeContent() {
           >
             <Link href="/quiz" passHref>
               <Button className="bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-4 px-8 rounded-full text-xl transition-all duration-300 hover:scale-105 hover:shadow-xl hover:from-pink-600 hover:to-purple-700">
-                Take the Quiz
-                <ArrowRight className="ml-2 h-5 w-5 animate-bounce" />
+                Take the Quiz ✨
               </Button>
             </Link>
             <p className="mt-4 text-sm text-gray-500">Takes only 2 minutes!</p>

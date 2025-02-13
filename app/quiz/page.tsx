@@ -3,12 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { questions } from "@/app/data/questions";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { PersonalityTraits, Answer } from "@/app/data/types";
+import { getRandomQuestions } from "@/app/data/questionBank";
 
 export default function Quiz() {
+  const [questions] = useState(() => getRandomQuestions(12)); // Get 12 random questions
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const router = useRouter();
@@ -78,6 +79,18 @@ export default function Quiz() {
 
 function calculatePersonalityProfile(answers: Answer[]): PersonalityTraits {
   const initialProfile: PersonalityTraits = {
+    socialStyle: 5, // Start from middle values
+    emotionalReadiness: 5,
+    dateStyle: 5,
+    commitment: 5,
+    communication: 5,
+    independence: 5,
+    career: 5,
+    flexibility: 5,
+  };
+
+  // Calculate weighted scores based on number of questions per trait
+  const traitCounts: Record<keyof PersonalityTraits, number> = {
     socialStyle: 0,
     emotionalReadiness: 0,
     dateStyle: 0,
@@ -88,17 +101,20 @@ function calculatePersonalityProfile(answers: Answer[]): PersonalityTraits {
     flexibility: 0,
   };
 
-  // Calculate average scores for each trait
   const profile = answers.reduce((acc, answer) => {
     Object.entries(answer.traits).forEach(([trait, value]) => {
       acc[trait as keyof PersonalityTraits] += value;
+      traitCounts[trait as keyof PersonalityTraits]++;
     });
     return acc;
   }, initialProfile);
 
-  // Normalize scores
+  // Normalize scores considering question count per trait
   Object.keys(profile).forEach((trait) => {
-    profile[trait as keyof PersonalityTraits] /= answers.length;
+    const traitKey = trait as keyof PersonalityTraits;
+    if (traitCounts[traitKey] > 0) {
+      profile[traitKey] = profile[traitKey] / traitCounts[traitKey];
+    }
   });
 
   return profile;

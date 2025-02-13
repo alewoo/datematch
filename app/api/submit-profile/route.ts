@@ -6,7 +6,6 @@ import { sendConfirmationEmail } from "@/lib/email";
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    console.log("API Key present:", !!process.env.RESEND_API_KEY); // Check if API key exists
 
     // Insert the profile into Supabase
     const { data: profile, error } = await supabase

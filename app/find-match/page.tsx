@@ -13,6 +13,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Link from "next/link";
+import { Heart } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const GEORGIA_UNIVERSITIES = [
   "Georgia Institute of Technology",
@@ -36,11 +44,11 @@ export default function FindMatch() {
     interests: "",
     idealDate: "",
   });
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Age verification
     const age = parseInt(formData.age);
     if (age < 18) {
       alert("You must be 18 or older to use this service.");
@@ -69,10 +77,11 @@ export default function FindMatch() {
 
       if (!response.ok) throw new Error(data.error);
 
-      alert(
-        "Thanks for submitting! We'll be in touch soon about potential matches!"
-      );
-      router.push("/");
+      setShowConfirmation(true);
+
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
     } catch (error) {
       console.error("Error:", error);
       alert("There was an error submitting your profile. Please try again.");
@@ -81,20 +90,35 @@ export default function FindMatch() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-red-100 to-purple-100 py-12 px-4">
+      {/* Logo */}
+      <motion.div
+        className="absolute top-4 left-4 z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        <Link href="/" className="flex items-center space-x-2">
+          <Heart className="text-pink-500 h-6 w-6" />
+          <span className="font-bold text-xl bg-gradient-to-r from-pink-500 to-purple-600 text-transparent bg-clip-text">
+            DateMatch
+          </span>
+        </Link>
+      </motion.div>
+
       <div className="max-w-2xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-xl p-6"
+          className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8"
         >
-          <h1 className="text-3xl font-bold mb-4 text-center">
+          <h1 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 text-center">
             Find Your Perfect Match
           </h1>
-          <p className="text-gray-600 text-center mb-6">
-            Meet amazing people at Georgia Tech!
+          <p className="text-gray-600 text-center mb-8">
+            Meet amazing people for you!
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium mb-2">Name</label>
               <Input
@@ -260,15 +284,57 @@ export default function FindMatch() {
               </p>
             </div>
 
+            <style jsx global>{`
+              .select-trigger {
+                border-color: #ec4899 !important;
+              }
+              .select-trigger:focus {
+                ring-color: #ec4899 !important;
+              }
+              input:focus,
+              textarea:focus {
+                border-color: #ec4899 !important;
+                ring-color: #ec4899 !important;
+              }
+            `}</style>
+
             <Button
               type="submit"
-              className="w-full bg-rose-500 hover:bg-rose-600 text-white py-3 rounded-xl"
+              className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-4 px-8 rounded-full text-xl transition-all duration-300 hover:scale-105 hover:shadow-xl hover:from-pink-600 hover:to-purple-700"
             >
               Find My Match
+              <Heart className="ml-2 h-5 w-5 animate-pulse" />
             </Button>
           </form>
         </motion.div>
       </div>
+
+      <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+        <DialogContent className="bg-white/95 backdrop-blur-sm">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-pink-500 to-purple-600 text-transparent bg-clip-text">
+              Profile Submitted! 💝
+            </DialogTitle>
+          </DialogHeader>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-6 text-center space-y-4"
+          >
+            <p className="text-lg text-gray-700">
+              Thanks for submitting your profile! We're excited to help you find
+              your perfect match.
+            </p>
+            <p className="text-gray-600">
+              We'll be in touch soon with potential matches that align with your
+              personality and preferences.
+            </p>
+            <div className="flex justify-center pt-4">
+              <Heart className="text-pink-500 h-8 w-8 animate-pulse" />
+            </div>
+          </motion.div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

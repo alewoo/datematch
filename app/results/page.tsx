@@ -27,6 +27,7 @@ import {
 } from "recharts";
 import { PersonalityTraits } from "@/app/data/types";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface ResultCategory {
   range: [number, number];
@@ -42,7 +43,7 @@ const resultCategories: ResultCategory[] = [
     title: "LOVE MAGNET",
     message: "You're a natural at relationships. Cupid's got nothing on you!",
     icon: <Heart className="w-12 h-12" />,
-    color: "bg-red-500",
+    color: "bg-gradient-to-r from-rose-400 to-pink-500",
   },
   {
     range: [60, 79],
@@ -50,14 +51,14 @@ const resultCategories: ResultCategory[] = [
     message:
       "You're putting yourself out there. Love might be just around the corner!",
     icon: <Heart className="w-12 h-12" />,
-    color: "bg-pink-500",
+    color: "bg-gradient-to-r from-pink-400 to-purple-400",
   },
   {
     range: [40, 59],
     title: "SINGLE... FOR NOW",
     message: "You're open to love, but not in a rush. Keep doing you!",
     icon: <Ghost className="w-12 h-12" />,
-    color: "bg-purple-400",
+    color: "bg-gradient-to-r from-purple-400 to-violet-400",
   },
   {
     range: [0, 39],
@@ -65,7 +66,7 @@ const resultCategories: ResultCategory[] = [
     message:
       "You're embracing the single life like a pro! Your independence game is strong.",
     icon: <Ghost className="w-12 h-12" />,
-    color: "bg-purple-600",
+    color: "bg-gradient-to-r from-violet-400 to-indigo-400",
   },
 ];
 
@@ -160,12 +161,9 @@ function ResultsContent() {
   };
 
   const shareResult = async () => {
-    const shareText = `I scored ${Object.values(profile).reduce(
-      (a, b) => a + b,
-      0
-    )}% on the "Will You Stay Single Forever?" quiz and got "${
-      resultCategories[0].title
-    }"! Take it yourself:`;
+    const shareText = `I got "${title}" on the Single Forever quiz! My top traits are ${strengths.join(
+      ", "
+    )}. Take it yourself:`;
     const shareUrl = window.location.origin;
 
     if (navigator.share) {
@@ -178,20 +176,34 @@ function ResultsContent() {
       } catch (err) {
         console.error("Error sharing:", err);
       }
-    } else {
-      // Fallback to copying to clipboard
-      navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-      alert("Copied to clipboard!");
     }
   };
 
   const downloadResultCard = async () => {
-    if (resultCardRef.current) {
-      const dataUrl = await toPng(resultCardRef.current, { quality: 0.95 });
+    if (!resultCardRef.current) return;
+
+    try {
+      resultCardRef.current.classList.add("rendering");
+
+      await new Promise((resolve) => setTimeout(resolve, 100)); // Give time for rendering
+
+      const dataUrl = await toPng(resultCardRef.current, {
+        cacheBust: true,
+        quality: 1.0,
+        pixelRatio: 2,
+        backgroundColor: "#ffffff",
+      });
+
       const link = document.createElement("a");
-      link.download = "my-single-score.png";
+      link.download = `datematch-${title
+        .toLowerCase()
+        .replace(/\s+/g, "-")}.png`;
       link.href = dataUrl;
       link.click();
+
+      resultCardRef.current.classList.remove("rendering");
+    } catch (err) {
+      console.error("Error generating image:", err);
     }
   };
 
@@ -253,23 +265,18 @@ function ResultsContent() {
   };
 
   const getTraitLevel = (trait: string, score: number) => {
-    const traitLevels: Record<
-      string,
-      Array<{ threshold: number; label: string; color: string }>
-    > = {
+    const levels = {
       socialStyle: [
-        { threshold: 8, label: "Social Butterfly", color: "text-rose-500" },
-        { threshold: 6, label: "Outgoing", color: "text-rose-400" },
-        { threshold: 4, label: "Selective", color: "text-purple-400" },
-        { threshold: 2, label: "Reserved", color: "text-purple-500" },
-        { threshold: 0, label: "Private", color: "text-purple-600" },
+        { threshold: 8, label: "Highly Social", color: "text-rose-500" },
+        { threshold: 6, label: "Moderately Social", color: "text-rose-400" },
+        { threshold: 4, label: "Selectively Social", color: "text-purple-400" },
+        { threshold: 0, label: "Private", color: "text-purple-500" },
       ],
       emotionalReadiness: [
         { threshold: 8, label: "Fully Ready", color: "text-rose-500" },
-        { threshold: 6, label: "Open to Love", color: "text-rose-400" },
-        { threshold: 4, label: "Still Exploring", color: "text-purple-400" },
-        { threshold: 2, label: "Taking Time", color: "text-purple-500" },
-        { threshold: 0, label: "Self-Focused", color: "text-purple-600" },
+        { threshold: 6, label: "Getting Ready", color: "text-rose-400" },
+        { threshold: 4, label: "Taking Time", color: "text-purple-400" },
+        { threshold: 0, label: "Self-Focused", color: "text-purple-500" },
       ],
       dateStyle: [
         { threshold: 8, label: "Bold & Direct", color: "text-rose-500" },
@@ -319,13 +326,11 @@ function ResultsContent() {
       ],
     };
 
-    const levels = traitLevels[trait] || traitLevels.socialStyle;
-    for (const level of levels) {
-      if (score >= level.threshold) {
-        return level;
-      }
-    }
-    return levels[levels.length - 1];
+    const traitLevels = levels[trait] || levels.default;
+    return (
+      traitLevels.find((level) => score >= level.threshold) ||
+      traitLevels[traitLevels.length - 1]
+    );
   };
 
   const getStrengthsAndGrowth = (profile: PersonalityTraits) => {
@@ -392,22 +397,32 @@ function ResultsContent() {
       growthAreas.push("Consider being more open to different perspectives");
     }
 
-    // Add general growth areas if we don't have enough
+    // Ensure we have growth areas
     if (growthAreas.length < 2) {
-      if (profile.communication < 6) {
-        growthAreas.push("Enhance communication skills in dating contexts");
+      if (profile.communication < 8) {
+        growthAreas.push("Practice expressing your feelings more openly");
       }
-      if (profile.emotionalReadiness < 6) {
-        growthAreas.push("Explore your emotional needs and boundaries");
+      if (profile.emotionalReadiness < 8) {
+        growthAreas.push("Take time to understand your emotional needs better");
       }
-      if (profile.flexibility < 6) {
-        growthAreas.push("Practice being more adaptable in relationships");
+      if (profile.flexibility < 8) {
+        growthAreas.push("Consider being more open to different perspectives");
+      }
+      if (profile.socialStyle < 8) {
+        growthAreas.push(
+          "Explore more social connections and group activities"
+        );
+      }
+      if (profile.dateStyle < 8) {
+        growthAreas.push("Try new approaches to meeting potential partners");
       }
     }
 
-    // Ensure we have at least one strength
-    if (strengths.length === 0) {
-      strengths.push("Good self-awareness and willingness to grow");
+    // Always ensure at least one growth area
+    if (growthAreas.length === 0) {
+      growthAreas.push(
+        "Continue developing self-awareness and relationship skills"
+      );
     }
 
     return {
@@ -533,8 +548,104 @@ function ResultsContent() {
     return descriptions[trait];
   };
 
+  const gradientId = "colorGradient";
+
+  const DownloadCard = () => {
+    const chartData = Object.entries(profile).map(([key, value]) => ({
+      trait: key
+        .replace(/([A-Z])/g, " $1")
+        .toLowerCase()
+        .replace(/^\w/, (c) => c.toUpperCase()),
+      value: value,
+    }));
+
+    return (
+      <div
+        ref={resultCardRef}
+        className="fixed left-[-9999px] top-0"
+        style={{
+          width: "1200px",
+          height: "630px",
+          backgroundColor: "#fff",
+          padding: "40px",
+        }}
+      >
+        <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-3xl p-8 h-full flex flex-col items-center justify-between shadow-lg">
+          {/* Header */}
+          <div className="text-center space-y-4">
+            <div className="text-6xl mb-2">✨</div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 text-transparent bg-clip-text">
+              {title}
+            </h1>
+            <p className="text-gray-600 text-xl max-w-2xl">{description}</p>
+          </div>
+
+          {/* Radar Chart */}
+          <div className="w-[400px] h-[400px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+                <PolarGrid stroke="#e5e7eb" />
+                <PolarAngleAxis
+                  dataKey="trait"
+                  tick={{ fill: "#6b7280", fontSize: 14 }}
+                />
+                <Radar
+                  name="Your Profile"
+                  dataKey="value"
+                  stroke="#ec4899"
+                  fill="#ec4899"
+                  fillOpacity={0.4}
+                />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Top Traits */}
+          <div className="space-y-4">
+            <div className="flex gap-4">
+              {Object.entries(profile)
+                .sort(([, a], [, b]) => b - a)
+                .slice(0, 3)
+                .map(([trait]) => (
+                  <div
+                    key={trait}
+                    className="bg-white rounded-full px-4 py-2 shadow-sm border border-pink-100"
+                  >
+                    <span className="mr-2">{getTraitEmoji(trait)}</span>
+                    <span className="text-gray-700">
+                      {trait.replace(/([A-Z])/g, " $1").toLowerCase()}
+                    </span>
+                  </div>
+                ))}
+            </div>
+            <div className="flex items-center justify-center gap-2 text-gray-500">
+              <Heart className="w-4 h-4 text-pink-400" />
+              <span className="font-medium">datematch.vercel.app</span>
+              <Heart className="w-4 h-4 text-purple-400" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-red-100 to-purple-100 py-12 px-4">
+      {/* Logo */}
+      <motion.div
+        className="absolute top-4 left-4 z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        <Link href="/" className="flex items-center space-x-2">
+          <Heart className="text-pink-500 h-6 w-6" />
+          <span className="font-bold text-xl bg-gradient-to-r from-pink-500 to-purple-600 text-transparent bg-clip-text">
+            DateMatch
+          </span>
+        </Link>
+      </motion.div>
+
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Personality Type Header */}
         <motion.div
@@ -548,6 +659,47 @@ function ResultsContent() {
               <div className="text-lg text-gray-600">{description}</div>
             </>
           )}
+        </motion.div>
+
+        {/* Your Love Profile */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-2xl shadow-xl p-6 mb-6"
+        >
+          <h2 className="text-2xl font-bold mb-4 flex items-center">
+            <span className="bg-pink-100 p-2 rounded-lg mr-2">��</span>
+            Your Love Profile
+          </h2>
+          <div className="w-full h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+                <defs>
+                  <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#ec4899" stopOpacity={0.8} />
+                    <stop offset="100%" stopColor="#7c3aed" stopOpacity={0.8} />
+                  </linearGradient>
+                </defs>
+                <PolarGrid stroke="#e5e7eb" />
+                <PolarAngleAxis
+                  dataKey="trait"
+                  tick={{ fill: "#6b7280", fontSize: 12 }}
+                />
+                <PolarRadiusAxis
+                  angle={30}
+                  domain={[0, 10]}
+                  tick={{ fill: "#6b7280" }}
+                />
+                <Radar
+                  name="Your Profile"
+                  dataKey="value"
+                  stroke="url(#colorGradient)"
+                  fill="url(#colorGradient)"
+                  fillOpacity={0.4}
+                />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
         </motion.div>
 
         {/* Quick Stats Cards */}
@@ -680,27 +832,29 @@ function ResultsContent() {
         >
           <Button
             onClick={shareResult}
-            className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-3 rounded-xl flex items-center"
+            className="bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white px-6 py-3 rounded-xl flex items-center transition-all duration-300"
           >
             <Share2 className="w-5 h-5 mr-2" />
             Share Results
           </Button>
           <Button
             onClick={downloadResultCard}
-            className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-xl flex items-center"
+            className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-6 py-3 rounded-xl flex items-center transition-all duration-300"
           >
             <Download className="w-5 h-5 mr-2" />
             Download Card
           </Button>
           <Button
             onClick={() => router.push("/find-match")}
-            className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl flex items-center"
+            className="bg-gradient-to-r from-purple-400 to-violet-500 hover:from-purple-500 hover:to-violet-600 text-white px-6 py-3 rounded-xl flex items-center transition-all duration-300"
           >
             <Heart className="w-5 h-5 mr-2" />
             Find Your Match
           </Button>
         </motion.div>
       </div>
+
+      <DownloadCard />
     </div>
   );
 }

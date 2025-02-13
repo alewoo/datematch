@@ -18,7 +18,7 @@ export interface Answer {
 }
 
 export interface Question {
-  id: number;
+  id: string;
   text: string;
   category:
     | "social"
@@ -26,7 +26,9 @@ export interface Question {
     | "lifestyle"
     | "communication"
     | "values"
-    | "career";
+    | "career"
+    | "commitment"
+    | "trust";
   icon: ReactElement;
   answers: Answer[];
 }

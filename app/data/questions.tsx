@@ -22,7 +22,7 @@ function createIcon(
 
 export const questions: Question[] = [
   {
-    id: 1,
+    id: "1",
     text: "How do you typically meet potential romantic interests?",
     icon: createIcon(Users, "w-6 h-6 text-pink-500"),
     category: "social",
@@ -70,7 +70,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 2,
+    id: "2",
     text: "What's your ideal first date?",
     icon: createIcon(Coffee, "w-6 h-6 text-brown-500"),
     category: "dating",
@@ -116,7 +116,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 3,
+    id: "3",
     text: "How do you handle your crush's social media activity?",
     icon: createIcon(Smartphone, "w-6 h-6 text-blue-500"),
     category: "social",
@@ -160,7 +160,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 4,
+    id: "4",
     text: "What's your approach to balancing romance and career/education?",
     icon: createIcon(Briefcase, "w-6 h-6 text-gray-600"),
     category: "career",
@@ -205,7 +205,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 5,
+    id: "5",
     text: "How do you spend most of your free time on campus?",
     icon: createIcon(Headphones, "w-6 h-6 text-purple-500"),
     category: "lifestyle",
@@ -250,7 +250,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 6,
+    id: "6",
     text: "How do you feel about long-term relationships?",
     icon: createIcon(Heart, "w-6 h-6 text-red-500"),
     category: "dating",
@@ -295,7 +295,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 7,
+    id: "7",
     text: "How do you handle rejection or disappointment in dating?",
     icon: createIcon(Book, "w-6 h-6 text-green-500"),
     category: "dating",
@@ -340,7 +340,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 8,
+    id: "8",
     text: "What's your idea of a perfect weekend?",
     icon: createIcon(Calendar, "w-6 h-6 text-indigo-500"),
     category: "lifestyle",
@@ -384,7 +384,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 9,
+    id: "9",
     text: "How do you feel about using dating apps?",
     icon: createIcon(Smartphone, "w-6 h-6 text-pink-500"),
     category: "dating",
@@ -429,7 +429,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 10,
+    id: "10",
     text: "Where do you see yourself in 5 years regarding relationships?",
     icon: createIcon(Home, "w-6 h-6 text-blue-500"),
     category: "lifestyle",
@@ -473,7 +473,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 11,
+    id: "11",
     text: "How do you feel about dating someone from your major/classes?",
     icon: createIcon(Book, "w-6 h-6 text-purple-500"),
     category: "dating",
@@ -519,7 +519,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 12,
+    id: "12",
     text: "What's your biggest concern about dating in college?",
     icon: createIcon(Book, "w-6 h-6 text-red-500"),
     category: "lifestyle",
@@ -564,7 +564,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 13,
+    id: "13",
     text: "How do you handle dating during exam periods?",
     icon: createIcon(Book, "w-6 h-6 text-yellow-500"),
     category: "lifestyle",
@@ -608,7 +608,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 14,
+    id: "14",
     text: "How do you feel about long-distance relationships during summer break?",
     icon: createIcon(Smartphone, "w-6 h-6 text-blue-500"),
     category: "dating",
@@ -653,7 +653,7 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: 15,
+    id: "15",
     text: "What's your take on dating someone from a rival college?",
     icon: createIcon(Users, "w-6 h-6 text-green-500"),
     category: "values",
