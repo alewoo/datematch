@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Share2, Heart, Download } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
 import { Suspense } from "react";
+import Link from "next/link";
 
 import { toPng } from "html-to-image";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,6 @@ import {
 } from "recharts";
 import { PersonalityTraits } from "@/app/data/types";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 interface TraitLevel {
   threshold: number;
@@ -83,7 +83,9 @@ function ResultsContent({ profile }: { profile: PersonalityTraits }) {
     const shareText = `I got "${title}" on the DateMatch quiz! My top traits are ${topStrengths.join(
       ", "
     )}. Take it yourself:`;
-    const shareUrl = "https://datematch.lol";
+    const shareUrl =
+      "https://datematch.lol/results?profile=" +
+      encodeURIComponent(JSON.stringify(profile));
 
     posthog.capture("share_result", {
       title,

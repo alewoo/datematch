@@ -17,28 +17,28 @@ function HomeParams() {
 }
 
 function HomeContent({ friendMessage }: { friendMessage: string | null }) {
-  const [timeLeft, setTimeLeft] = useState<string | null>(null);
+  // const [timeLeft, setTimeLeft] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date();
-      const valentinesDay = new Date(now.getFullYear(), 1, 14);
-      if (now > valentinesDay) {
-        valentinesDay.setFullYear(valentinesDay.getFullYear() + 1);
-      }
-      const difference = valentinesDay.getTime() - now.getTime();
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(
-        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-      setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
-    }, 1000);
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     const now = new Date();
+  //     const valentinesDay = new Date(now.getFullYear(), 1, 14);
+  //     if (now > valentinesDay) {
+  //       valentinesDay.setFullYear(valentinesDay.getFullYear() + 1);
+  //     }
+  //     const difference = valentinesDay.getTime() - now.getTime();
+  //     const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+  //     const hours = Math.floor(
+  //       (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  //     );
+  //     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+  //     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+  //     setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+  //   }, 1000);
 
-    return () => clearInterval(timer);
-  }, []);
+  //   return () => clearInterval(timer);
+  // }, []);
 
   useEffect(() => {
     setIsLoading(false);
@@ -139,7 +139,7 @@ function HomeContent({ friendMessage }: { friendMessage: string | null }) {
             </Link>
             <p className="mt-4 text-sm text-gray-500">Takes only 2 minutes!</p>
           </motion.div>
-          <motion.div
+          {/* <motion.div
             className="mt-12 text-lg text-gray-600"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -153,7 +153,7 @@ function HomeContent({ friendMessage }: { friendMessage: string | null }) {
                 Loading countdown...
               </p>
             )}
-          </motion.div>
+          </motion.div> */}
         </motion.div>
       )}
 
