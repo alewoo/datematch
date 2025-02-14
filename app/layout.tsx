@@ -40,8 +40,18 @@ export const metadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: "/heart-icon.png",
-    apple: "/heart-icon.png",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+    other: {
+      rel: "apple-touch-icon",
+      url: "/apple-touch-icon.png",
+    },
   },
 };
 
