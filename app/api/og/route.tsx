@@ -24,35 +24,34 @@ export async function GET() {
               flexDirection: "column",
               alignItems: "center",
               gap: "24px",
+              padding: "40px",
             }}
           >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "12px",
+                gap: "16px",
               }}
             >
               <div
                 style={{
                   background: "linear-gradient(to right, #ec4899, #8b5cf6)",
-                  width: "48px",
-                  height: "48px",
+                  width: "64px",
+                  height: "64px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  borderRadius: "12px",
+                  borderRadius: "16px",
                 }}
               >
-                <span style={{ fontSize: 32 }}>💝</span>
+                <span style={{ fontSize: 40 }}>💝</span>
               </div>
               <span
                 style={{
-                  fontSize: 48,
+                  fontSize: 56,
                   fontWeight: "bold",
-                  background: "linear-gradient(to right, #ec4899, #8b5cf6)",
-                  backgroundClip: "text",
-                  color: "transparent",
+                  color: "#ec4899",
                 }}
               >
                 DateMatch
@@ -61,11 +60,12 @@ export async function GET() {
 
             <div
               style={{
-                fontSize: 32,
+                fontSize: 48,
                 textAlign: "center",
-                maxWidth: "80%",
+                maxWidth: "90%",
                 color: "#4b5563",
-                marginTop: "20px",
+                marginTop: "32px",
+                fontWeight: "bold",
               }}
             >
               Will You Stay Single Forever?
@@ -73,14 +73,16 @@ export async function GET() {
 
             <div
               style={{
-                fontSize: 24,
+                fontSize: 32,
                 color: "#6b7280",
                 textAlign: "center",
-                marginTop: "12px",
+                marginTop: "16px",
+                maxWidth: "80%",
               }}
             >
               Find your perfect match through personality-driven university
-              dating ✨
+              dating ✨ Find your perfect match through personality-driven
+              university dating ✨
             </div>
           </div>
         </div>
