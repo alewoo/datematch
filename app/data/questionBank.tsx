@@ -1167,12 +1167,298 @@ export const questionBank: Question[] = [
     ],
   },
 
-  // Would you like me to continue with more questions to reach 50+? I can add:
-  // - FINANCIAL PLANNING
-  // - FRIEND GROUP DYNAMICS
-  // - CAMPUS ACTIVITIES
-  // - RELATIONSHIP MILESTONES
-  // And more...
+  // Add these new questions to the questionBank array
+
+  {
+    id: "social_8",
+    text: "How do you feel about your partner's social media presence?",
+    icon: createIcon(Smartphone, "w-6 h-6 text-blue-500"),
+    category: "social",
+    answers: [
+      {
+        text: "I prefer they keep our relationship private",
+        traits: { socialStyle: 4, independence: 8, communication: 6 },
+        explanation: "You value privacy in relationships",
+      },
+      {
+        text: "Love sharing our moments together",
+        traits: { socialStyle: 8, dateStyle: 7, communication: 7 },
+        explanation:
+          "You're comfortable with public displays of affection online",
+      },
+      {
+        text: "Don't care as long as there's trust",
+        traits: { independence: 7, emotionalReadiness: 8, flexibility: 7 },
+        explanation: "You prioritize trust over social media behavior",
+      },
+      {
+        text: "Prefer minimal social media use overall",
+        traits: { socialStyle: 3, independence: 7, emotionalReadiness: 6 },
+        explanation: "You value real-world connections over digital presence",
+      },
+    ],
+  },
+
+  {
+    id: "career_5",
+    text: "How do you handle career networking events when dating?",
+    icon: createIcon(Briefcase, "w-6 h-6 text-gray-500"),
+    category: "career",
+    answers: [
+      {
+        text: "Bring my partner as a plus-one",
+        traits: { career: 7, socialStyle: 8, dateStyle: 7 },
+        explanation: "You integrate your romantic and professional life",
+      },
+      {
+        text: "Keep professional and dating life separate",
+        traits: { career: 8, independence: 7, flexibility: 5 },
+        explanation: "You maintain clear boundaries between work and dating",
+      },
+      {
+        text: "Use it as an opportunity to meet people",
+        traits: { career: 6, socialStyle: 8, independence: 7 },
+        explanation: "You're open to connections in all contexts",
+      },
+      {
+        text: "Focus solely on career opportunities",
+        traits: { career: 9, independence: 8, dateStyle: 4 },
+        explanation: "You prioritize professional growth",
+      },
+    ],
+  },
+
+  {
+    id: "lifestyle_5",
+    text: "What's your approach to sharing expenses while dating in college?",
+    icon: createIcon(DollarSign, "w-6 h-6 text-green-500"),
+    category: "lifestyle",
+    answers: [
+      {
+        text: "Split everything 50/50",
+        traits: { independence: 8, communication: 7, flexibility: 6 },
+        explanation: "You value financial equality in relationships",
+      },
+      {
+        text: "Take turns paying",
+        traits: { flexibility: 8, communication: 7, dateStyle: 7 },
+        explanation: "You're flexible with financial arrangements",
+      },
+      {
+        text: "Whoever suggests the date pays",
+        traits: { dateStyle: 7, communication: 8, flexibility: 7 },
+        explanation: "You believe in fair contribution based on initiative",
+      },
+      {
+        text: "Prefer low-cost or free activities",
+        traits: { flexibility: 7, dateStyle: 6, independence: 7 },
+        explanation: "You prioritize experiences over spending",
+      },
+    ],
+  },
+
+  {
+    id: "social_9",
+    text: "How do you handle running into your ex on campus?",
+    icon: createIcon(Map, "w-6 h-6 text-red-500"),
+    category: "social",
+    answers: [
+      {
+        text: "Maintain friendly but distant contact",
+        traits: { emotionalReadiness: 8, communication: 7, socialStyle: 6 },
+        explanation: "You handle past relationships maturely",
+      },
+      {
+        text: "Avoid them completely",
+        traits: { emotionalReadiness: 5, independence: 7, socialStyle: 4 },
+        explanation: "You prefer clear boundaries with past relationships",
+      },
+      {
+        text: "Act like nothing happened",
+        traits: { emotionalReadiness: 6, socialStyle: 5, flexibility: 7 },
+        explanation: "You prioritize maintaining normalcy",
+      },
+      {
+        text: "Use it as motivation to grow",
+        traits: { emotionalReadiness: 9, independence: 8, flexibility: 7 },
+        explanation: "You turn challenges into opportunities",
+      },
+    ],
+  },
+
+  {
+    id: "academic_4",
+    text: "How do you balance club activities and dating?",
+    icon: createIcon(Users, "w-6 h-6 text-purple-500"),
+    category: "lifestyle",
+    answers: [
+      {
+        text: "Invite my date to club events",
+        traits: { socialStyle: 8, dateStyle: 7, flexibility: 7 },
+        explanation: "You integrate different aspects of your life",
+      },
+      {
+        text: "Schedule specific days for each",
+        traits: { independence: 7, communication: 8, flexibility: 6 },
+        explanation: "You maintain structured time management",
+      },
+      {
+        text: "Prioritize based on importance",
+        traits: { flexibility: 8, communication: 7, independence: 7 },
+        explanation: "You adapt based on priorities",
+      },
+      {
+        text: "Focus mainly on clubs",
+        traits: { independence: 8, socialStyle: 7, dateStyle: 4 },
+        explanation: "You prioritize extracurricular activities",
+      },
+    ],
+  },
+
+  {
+    id: "future_3",
+    text: "How do you approach discussions about post-graduation plans with a partner?",
+    icon: createIcon(Brain, "w-6 h-6 text-blue-500"),
+    category: "career",
+    answers: [
+      {
+        text: "Discuss early to ensure alignment",
+        traits: { communication: 9, commitment: 8, emotionalReadiness: 8 },
+        explanation: "You value long-term planning and compatibility",
+      },
+      {
+        text: "Wait until it becomes relevant",
+        traits: { flexibility: 7, independence: 6, emotionalReadiness: 5 },
+        explanation: "You prefer to let relationships develop naturally",
+      },
+      {
+        text: "Focus on the present moment",
+        traits: { dateStyle: 7, flexibility: 6, commitment: 4 },
+        explanation: "You prioritize current experiences over future planning",
+      },
+      {
+        text: "Adapt plans based on the relationship",
+        traits: { flexibility: 8, commitment: 7, communication: 7 },
+        explanation: "You're flexible with future planning",
+      },
+    ],
+  },
+
+  {
+    id: "social_10",
+    text: "How do you handle dating during campus events and festivals?",
+    icon: createIcon(Calendar, "w-6 h-6 text-yellow-500"),
+    category: "social",
+    answers: [
+      {
+        text: "Always attend together",
+        traits: { socialStyle: 8, dateStyle: 7, commitment: 7 },
+        explanation: "You value shared experiences",
+      },
+      {
+        text: "Balance group and couple time",
+        traits: { flexibility: 8, socialStyle: 7, communication: 7 },
+        explanation: "You maintain social balance",
+      },
+      {
+        text: "Prefer attending separately",
+        traits: { independence: 8, socialStyle: 6, flexibility: 5 },
+        explanation: "You value individual experiences",
+      },
+      {
+        text: "Decide based on the event",
+        traits: { flexibility: 9, communication: 7, dateStyle: 6 },
+        explanation: "You're adaptable to different situations",
+      },
+    ],
+  },
+
+  {
+    id: "tech_4",
+    text: "What's your approach to sharing passwords with a partner?",
+    icon: createIcon(Lock, "w-6 h-6 text-gray-500"),
+    category: "trust",
+    answers: [
+      {
+        text: "Never share passwords",
+        traits: { independence: 9, commitment: 4, trust: 6 },
+        explanation: "You value digital privacy strongly",
+      },
+      {
+        text: "Share after becoming serious",
+        traits: { commitment: 8, trust: 7, communication: 7 },
+        explanation: "You see password sharing as a sign of trust",
+      },
+      {
+        text: "Share for practical purposes only",
+        traits: { flexibility: 7, trust: 6, communication: 8 },
+        explanation: "You're practical about digital sharing",
+      },
+      {
+        text: "Comfortable sharing anytime",
+        traits: { trust: 9, commitment: 8, independence: 4 },
+        explanation: "You prioritize openness in relationships",
+      },
+    ],
+  },
+
+  {
+    id: "achievement_2",
+    text: "How do you celebrate your partner's achievements?",
+    icon: createIcon(Trophy, "w-6 h-6 text-yellow-500"),
+    category: "support",
+    answers: [
+      {
+        text: "Plan elaborate celebrations",
+        traits: { dateStyle: 8, communication: 7, emotionalReadiness: 8 },
+        explanation: "You're enthusiastic about celebrating success",
+      },
+      {
+        text: "Simple congratulations is enough",
+        traits: { independence: 7, emotionalReadiness: 6, flexibility: 7 },
+        explanation: "You prefer low-key acknowledgments",
+      },
+      {
+        text: "Share on social media",
+        traits: { socialStyle: 8, dateStyle: 7, communication: 6 },
+        explanation: "You enjoy public displays of support",
+      },
+      {
+        text: "Support privately and personally",
+        traits: { emotionalReadiness: 8, communication: 7, independence: 6 },
+        explanation: "You value intimate celebrations",
+      },
+    ],
+  },
+
+  {
+    id: "travel_2",
+    text: "How do you feel about spring break travel with a partner?",
+    icon: createIcon(Plane, "w-6 h-6 text-blue-500"),
+    category: "lifestyle",
+    answers: [
+      {
+        text: "Perfect time for a couple's trip",
+        traits: { dateStyle: 8, commitment: 7, socialStyle: 7 },
+        explanation: "You value dedicated couple time",
+      },
+      {
+        text: "Prefer traveling with friends",
+        traits: { independence: 8, socialStyle: 7, dateStyle: 5 },
+        explanation: "You prioritize friend group experiences",
+      },
+      {
+        text: "Mix of both partner and friends",
+        traits: { flexibility: 9, socialStyle: 8, communication: 7 },
+        explanation: "You balance different relationships",
+      },
+      {
+        text: "Too early for traveling together",
+        traits: { independence: 7, emotionalReadiness: 5, commitment: 4 },
+        explanation: "You're cautious about relationship progression",
+      },
+    ],
+  },
 ];
 
 // Enhanced random question selection to ensure better trait coverage

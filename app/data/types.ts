@@ -9,6 +9,7 @@ export interface PersonalityTraits {
   independence: number; // Level of independence
   career: number; // Career focus and ambition
   flexibility: number;
+  trust: number;
 }
 
 export interface Answer {
@@ -28,7 +29,8 @@ export interface Question {
     | "values"
     | "career"
     | "commitment"
-    | "trust";
+    | "trust"
+    | "support";
   icon: ReactElement;
   answers: Answer[];
 }
