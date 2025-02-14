@@ -7,22 +7,39 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { PersonalityTraits, Answer } from "@/app/data/types";
 import { getRandomQuestions } from "@/app/data/questionBank";
+import { Suspense } from "react";
+import { usePostHog } from "posthog-js/react";
 
-export default function Quiz() {
-  const [questions] = useState(() => getRandomQuestions(12)); // Get 12 random questions
+function QuizContent() {
+  const [questions] = useState(() => getRandomQuestions(12));
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const router = useRouter();
+  const posthog = usePostHog();
 
   const handleAnswer = (answer: Answer) => {
     const newAnswers = [...answers, answer];
     setAnswers(newAnswers);
+
+    // Track answer in PostHog
+    posthog.capture("quiz_answer", {
+      questionNumber: currentQuestion + 1,
+      totalQuestions: questions.length,
+      answer: answer.text,
+    });
 
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
       // Calculate personality profile
       const profile = calculatePersonalityProfile(newAnswers);
+
+      // Track quiz completion
+      posthog.capture("quiz_complete", {
+        numberOfQuestions: questions.length,
+        profile: profile,
+      });
+
       router.push(
         `/results?profile=${encodeURIComponent(JSON.stringify(profile))}`
       );
@@ -118,4 +135,18 @@ function calculatePersonalityProfile(answers: Answer[]): PersonalityTraits {
   });
 
   return profile;
+}
+
+export default function Quiz() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-lg text-gray-600">Loading...</div>
+        </div>
+      }
+    >
+      <QuizContent />
+    </Suspense>
+  );
 }

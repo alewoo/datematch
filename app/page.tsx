@@ -7,11 +7,17 @@ import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import posthog from "posthog-js";
 
-function HomeContent() {
-  const [timeLeft, setTimeLeft] = useState<string | null>(null);
+// Wrap the part that uses useSearchParams in a separate component
+function HomeParams() {
   const searchParams = useSearchParams();
   const friendMessage = searchParams.get("invite");
+  return <HomeContent friendMessage={friendMessage} />;
+}
+
+function HomeContent({ friendMessage }: { friendMessage: string | null }) {
+  const [timeLeft, setTimeLeft] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -37,6 +43,15 @@ function HomeContent() {
   useEffect(() => {
     setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (friendMessage) {
+      posthog.capture("quiz_started", {
+        fromInvite: true,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }, [friendMessage]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-red-100 to-purple-100 flex flex-col items-center justify-center p-4">
@@ -165,8 +180,14 @@ function HomeContent() {
 
 export default function Home() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <HomeContent />
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-lg text-gray-600">Loading...</div>
+        </div>
+      }
+    >
+      <HomeParams />
     </Suspense>
   );
 }

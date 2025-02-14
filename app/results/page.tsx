@@ -4,10 +4,11 @@ import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Share2, Heart, Download } from "lucide-react";
+import { usePostHog } from "posthog-js/react";
+import { Suspense } from "react";
 
 import { toPng } from "html-to-image";
 import { Button } from "@/components/ui/button";
-import { Suspense } from "react";
 import {
   RadarChart,
   PolarGrid,
@@ -26,15 +27,20 @@ interface TraitLevel {
   color: string;
 }
 
-function ResultsContent() {
+function ResultsParams() {
   const searchParams = useSearchParams();
-  const profile: PersonalityTraits = JSON.parse(
+  const profile = JSON.parse(
     decodeURIComponent(searchParams.get("profile") || "{}")
   );
+  return <ResultsContent profile={profile} />;
+}
+
+function ResultsContent({ profile }: { profile: PersonalityTraits }) {
   const resultCardRef = useRef<HTMLDivElement>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const router = useRouter();
+  const posthog = usePostHog();
 
   const chartData = Object.entries(profile).map(([key, value]) => ({
     trait: key
@@ -62,6 +68,16 @@ function ResultsContent() {
     };
   };
 
+  useEffect(() => {
+    if (profile) {
+      // Track when results are viewed
+      posthog.capture("results_viewed", {
+        profile: profile,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }, [profile, posthog]);
+
   const shareResult = async () => {
     const { strengths: topStrengths } = getOverallAnalysis();
     const shareText = `I got "${title}" on the DateMatch quiz! My top traits are ${topStrengths.join(
@@ -69,7 +85,16 @@ function ResultsContent() {
     )}. Take it yourself:`;
     const shareUrl = "https://datematch.lol";
 
-    if (navigator.share) {
+    posthog.capture("share_result", {
+      title,
+      topStrengths,
+      shareMethod:
+        typeof navigator !== "undefined" && "share" in navigator
+          ? "native_share"
+          : "fallback",
+    });
+
+    if (typeof navigator !== "undefined" && "share" in navigator) {
       try {
         await navigator.share({
           title: "My DateMatch Results",
@@ -83,6 +108,7 @@ function ResultsContent() {
   };
 
   const downloadResultCard = async () => {
+    posthog.capture("download_result_card");
     if (!resultCardRef.current) return;
 
     try {
@@ -758,8 +784,14 @@ function getTraitEmoji(trait: string): string {
 
 export default function Results() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ResultsContent />
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-lg text-gray-600">Loading...</div>
+        </div>
+      }
+    >
+      <ResultsParams />
     </Suspense>
   );
 }

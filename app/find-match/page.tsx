@@ -21,6 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import posthog from "posthog-js";
 
 const GEORGIA_UNIVERSITIES = [
   "Georgia Institute of Technology",
@@ -30,16 +31,16 @@ const GEORGIA_UNIVERSITIES = [
   "Other",
 ] as const;
 
-export default function FindMatch() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <FindMatchContent />
-    </Suspense>
-  );
+function FindMatchParams() {
+  const searchParams = useSearchParams();
+  return <FindMatchContent searchParams={searchParams} />;
 }
 
-function FindMatchContent() {
-  const searchParams = useSearchParams();
+function FindMatchContent({
+  searchParams,
+}: {
+  searchParams: ReturnType<typeof useSearchParams>;
+}) {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
@@ -90,6 +91,14 @@ function FindMatchContent() {
       setTimeout(() => {
         router.push("/");
       }, 3000);
+
+      // Track form submission
+      posthog.capture("profile_submitted", {
+        university: formData.university,
+        // Don't include personal info like name, email
+        hasInstagram: !!formData.instagram,
+        timestamp: new Date().toISOString(),
+      });
     } catch (error) {
       console.error("Error:", error);
       alert("There was an error submitting your profile. Please try again.");
@@ -344,5 +353,19 @@ function FindMatchContent() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+export default function FindMatch() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-lg text-gray-600">Loading...</div>
+        </div>
+      }
+    >
+      <FindMatchParams />
+    </Suspense>
   );
 }
