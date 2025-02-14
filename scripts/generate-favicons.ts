@@ -1,12 +1,17 @@
 import sharp from "sharp";
-import fs from "fs/promises";
+import { promises as fs } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const projectRoot = join(__dirname, "..");
 
 const FAVICON_SIZES = [16, 32, 192, 512];
 const APPLE_TOUCH_ICON_SIZE = 180;
 
 async function generateFavicons() {
-  // Start with the SVG file instead of PNG
-  const source = sharp("public/logo.svg");
+  const source = sharp(join(projectRoot, "public/logo.svg"));
 
   // Generate regular favicons
   for (const size of FAVICON_SIZES) {
@@ -14,13 +19,13 @@ async function generateFavicons() {
       .clone()
       .resize(size, size)
       .png()
-      .toFile(`public/favicon-${size}x${size}.png`);
+      .toFile(join(projectRoot, `public/favicon-${size}x${size}.png`));
 
     // Copy the 32x32 version to favicon.ico
     if (size === 32) {
       await fs.copyFile(
-        `public/favicon-${size}x${size}.png`,
-        "public/favicon.ico"
+        join(projectRoot, `public/favicon-${size}x${size}.png`),
+        join(projectRoot, "public/favicon.ico")
       );
     }
 
@@ -30,7 +35,7 @@ async function generateFavicons() {
         .clone()
         .resize(size, size)
         .png()
-        .toFile(`public/android-chrome-${size}x${size}.png`);
+        .toFile(join(projectRoot, `public/android-chrome-${size}x${size}.png`));
     }
   }
 
@@ -39,7 +44,7 @@ async function generateFavicons() {
     .clone()
     .resize(APPLE_TOUCH_ICON_SIZE, APPLE_TOUCH_ICON_SIZE)
     .png()
-    .toFile("public/apple-touch-icon.png");
+    .toFile(join(projectRoot, "public/apple-touch-icon.png"));
 }
 
 generateFavicons().catch(console.error);
