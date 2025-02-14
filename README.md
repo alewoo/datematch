@@ -1,6 +1,6 @@
 # DateMatch
 
-![DateMatch Preview](public/og.png)
+![og-image](https://github.com/user-attachments/assets/3e23eb4f-50b4-4995-ac61-102e6492ff18)
 
 DateMatch is a personality-driven dating platform designed specifically for university students. By analyzing personality traits and compatibility factors, we help students find meaningful connections based on who they truly are.
 
