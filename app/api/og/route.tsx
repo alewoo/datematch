@@ -3,8 +3,8 @@ import { Inter } from "next/font/google";
 
 export const runtime = "edge";
 
-// Initialize Inter font
-const inter = Inter({ subsets: ["latin"] });
+// Initialize Inter font with bold weight
+const inter = Inter({ subsets: ["latin"], weight: ["700"] });
 
 export async function GET() {
   try {
@@ -49,10 +49,8 @@ export async function GET() {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  fill="#ffffff"
-                  d="M372.8 192.5c0 66.5-68.8 120.4-116.8 159.2-48-38.8-116.8-92.7-116.8-159.2 0-41.3 33.5-74.8 74.8-74.8 29.4 0 54.8 17 67 41.6 12.2-24.6 37.6-41.6 67-41.6 41.3 0 74.8 33.5 74.8 74.8z"
-                />
+                <circle cx="256" cy="256" r="256" fill="#ffffff" />
+                <path d="M256 128L384 384H128L256 128Z" fill="#ec4899" />
               </svg>
             </div>
             <div
@@ -61,7 +59,7 @@ export async function GET() {
                 WebkitBackgroundClip: "text",
                 color: "transparent",
                 fontSize: "64px",
-                fontWeight: "bold",
+                fontWeight: "700",
               }}
             >
               DateMatch

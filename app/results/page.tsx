@@ -483,25 +483,28 @@ function ResultsContent() {
 
         {/* Top Traits */}
         <div className="space-y-4">
-          <div className="flex gap-4">
+          <div className="flex items-center gap-4 justify-center">
             {Object.entries(profile)
               .sort(([, a], [, b]) => b - a)
               .slice(0, 3)
               .map(([trait]) => (
                 <div
                   key={trait}
-                  className="bg-white rounded-full px-4 py-2 shadow-sm border border-pink-100"
+                  className="flex items-center whitespace-nowrap bg-white rounded-full px-4 py-2 shadow-sm border border-pink-100"
                 >
                   <span className="mr-2">{getTraitEmoji(trait)}</span>
-                  <span className="text-gray-700">
-                    {trait.replace(/([A-Z])/g, " $1").toLowerCase()}
+                  <span className="text-gray-700 capitalize">
+                    {trait
+                      .replace(/([A-Z])/g, " $1")
+                      .trim()
+                      .toLowerCase()}
                   </span>
                 </div>
               ))}
           </div>
           <div className="flex items-center justify-center gap-2 text-gray-500">
             <Heart className="w-4 h-4 text-pink-400" />
-            <span className="font-medium">datematch.vercel.app</span>
+            <span className="font-medium">datematch.lol</span>
             <Heart className="w-4 h-4 text-purple-400" />
           </div>
         </div>
@@ -708,27 +711,27 @@ function ResultsContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="flex justify-center space-x-4 pt-6"
+          className="flex justify-center space-x-6 pt-8"
         >
           <Button
             onClick={shareResult}
-            className="bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white px-6 py-3 rounded-xl flex items-center transition-all duration-300"
+            className="bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white px-8 py-6 rounded-xl flex items-center transition-all duration-300 text-lg"
           >
-            <Share2 className="w-5 h-5 mr-2" />
+            <Share2 className="w-6 h-6 mr-3" />
             Share Results
           </Button>
           <Button
             onClick={downloadResultCard}
-            className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-6 py-3 rounded-xl flex items-center transition-all duration-300"
+            className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-8 py-6 rounded-xl flex items-center transition-all duration-300 text-lg"
           >
-            <Download className="w-5 h-5 mr-2" />
+            <Download className="w-6 h-6 mr-3" />
             Download Card
           </Button>
           <Button
             onClick={() => router.push("/find-match")}
-            className="bg-gradient-to-r from-purple-400 to-violet-500 hover:from-purple-500 hover:to-violet-600 text-white px-6 py-3 rounded-xl flex items-center transition-all duration-300"
+            className="bg-gradient-to-r from-purple-400 to-violet-500 hover:from-purple-500 hover:to-violet-600 text-white px-8 py-6 rounded-xl flex items-center transition-all duration-300 text-lg"
           >
-            <Heart className="w-5 h-5 mr-2" />
+            <Heart className="w-6 h-6 mr-3" />
             Find Your Match
           </Button>
         </motion.div>
