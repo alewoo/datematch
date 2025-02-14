@@ -1,4 +1,5 @@
 import sharp from "sharp";
+import fs from "fs/promises";
 
 const FAVICON_SIZES = [16, 32, 192, 512];
 const APPLE_TOUCH_ICON_SIZE = 180;
@@ -15,20 +16,21 @@ async function generateFavicons() {
       .png()
       .toFile(`public/favicon-${size}x${size}.png`);
 
-    if (size === 192) {
-      await source
-        .clone()
-        .resize(size, size)
-        .png()
-        .toFile("public/android-chrome-192x192.png");
+    // Copy the 32x32 version to favicon.ico
+    if (size === 32) {
+      await fs.copyFile(
+        `public/favicon-${size}x${size}.png`,
+        "public/favicon.ico"
+      );
     }
 
-    if (size === 512) {
+    // Generate Android Chrome icons
+    if (size === 192 || size === 512) {
       await source
         .clone()
         .resize(size, size)
         .png()
-        .toFile("public/android-chrome-512x512.png");
+        .toFile(`public/android-chrome-${size}x${size}.png`);
     }
   }
 
@@ -38,9 +40,6 @@ async function generateFavicons() {
     .resize(APPLE_TOUCH_ICON_SIZE, APPLE_TOUCH_ICON_SIZE)
     .png()
     .toFile("public/apple-touch-icon.png");
-
-  // Generate favicon.ico
-  await source.clone().resize(32, 32).png().toFile("public/favicon.ico");
 }
 
 generateFavicons().catch(console.error);
