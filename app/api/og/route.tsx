@@ -1,13 +1,22 @@
 import { ImageResponse } from "next/og";
-import { Inter } from "next/font/google";
 
 export const runtime = "edge";
 
-// Initialize Inter font with bold weight
-const inter = Inter({ subsets: ["latin"], weight: ["700"] });
-
 export async function GET() {
   try {
+    // Load the font files
+    const interRegular = await fetch(
+      new URL(
+        "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2"
+      )
+    ).then((res) => res.arrayBuffer());
+
+    const interBold = await fetch(
+      new URL(
+        "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hiJ-Ek-_EeA.woff2"
+      )
+    ).then((res) => res.arrayBuffer());
+
     return new ImageResponse(
       (
         <div
@@ -20,7 +29,7 @@ export async function GET() {
             justifyContent: "center",
             background:
               "linear-gradient(to bottom right, #fce7f3, #fee2e2, #f3e8ff)",
-            fontFamily: inter.style.fontFamily,
+            fontFamily: "Inter",
           }}
         >
           <div
@@ -49,8 +58,24 @@ export async function GET() {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <circle cx="256" cy="256" r="256" fill="#ffffff" />
-                <path d="M256 128L384 384H128L256 128Z" fill="#ec4899" />
+                <rect width="512" height="512" fill="url(#gradient)" rx="128" />
+                <path
+                  fill="#fff"
+                  d="M372.8 192.5c0 66.5-68.8 120.4-116.8 159.2-48-38.8-116.8-92.7-116.8-159.2 0-41.3 33.5-74.8 74.8-74.8 29.4 0 54.8 17 67 41.6 12.2-24.6 37.6-41.6 67-41.6 41.3 0 74.8 33.5 74.8 74.8z"
+                />
+                <defs>
+                  <linearGradient
+                    id="gradient"
+                    x1="0"
+                    x2="512"
+                    y1="0"
+                    y2="512"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop offset="0%" style={{ stopColor: "#ec4899" }} />
+                    <stop offset="100%" style={{ stopColor: "#8b5cf6" }} />
+                  </linearGradient>
+                </defs>
               </svg>
             </div>
             <div
@@ -59,7 +84,7 @@ export async function GET() {
                 WebkitBackgroundClip: "text",
                 color: "transparent",
                 fontSize: "64px",
-                fontWeight: "700",
+                fontWeight: 700,
               }}
             >
               DateMatch
@@ -82,6 +107,20 @@ export async function GET() {
       {
         width: 1200,
         height: 630,
+        fonts: [
+          {
+            name: "Inter",
+            data: interRegular,
+            weight: 400,
+            style: "normal",
+          },
+          {
+            name: "Inter",
+            data: interBold,
+            weight: 700,
+            style: "normal",
+          },
+        ],
       }
     );
   } catch (e: unknown) {
