@@ -1,15 +1,13 @@
 import { ImageResponse } from "next/og";
+import { Inter } from "next/font/google";
 
 export const runtime = "edge";
 
+// Initialize Inter font
+const inter = Inter({ subsets: ["latin"] });
+
 export async function GET() {
   try {
-    const interRegular = await fetch(
-      new URL(
-        "https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
-      )
-    ).then((res) => res.arrayBuffer());
-
     return new ImageResponse(
       (
         <div
@@ -22,7 +20,7 @@ export async function GET() {
             justifyContent: "center",
             background:
               "linear-gradient(to bottom right, #fce7f3, #fee2e2, #f3e8ff)",
-            fontFamily: "Inter",
+            fontFamily: inter.style.fontFamily,
           }}
         >
           <div
@@ -86,13 +84,6 @@ export async function GET() {
       {
         width: 1200,
         height: 630,
-        fonts: [
-          {
-            name: "Inter",
-            data: interRegular,
-            style: "normal",
-          },
-        ],
       }
     );
   } catch (e: unknown) {
