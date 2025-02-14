@@ -6,10 +6,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "generate-favicons": "cross-env NODE_OPTIONS=\"--loader ts-node/esm\" ts-node --esm scripts/generate-favicons.ts",
-    "postinstall": "npm run generate-favicons",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-favicon": "node scripts/generate-favicon.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.6",
