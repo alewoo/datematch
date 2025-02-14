@@ -6,22 +6,22 @@ import type React from "react"; // Import React
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Will You Stay Single Forever?",
+  title: "DateMatch",
   description:
     "Find your perfect match through personality-driven university dating, powered by in-depth personality analysis",
   metadataBase: new URL("https://datematch.lol"),
   openGraph: {
-    title: "Will You Stay Single Forever?",
+    title: "DateMatch",
     description:
       "Find your perfect match through personality-driven university dating, powered by in-depth personality analysis",
     url: "https://datematch.lol",
-    siteName: "DateMatch Quiz",
+    siteName: "DateMatch",
     images: [
       {
         url: "/api/og",
         width: 1200,
         height: 630,
-        alt: "DateMatch Quiz Preview",
+        alt: "DateMatch Preview",
       },
     ],
     locale: "en_US",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Will You Stay Single Forever?",
+    title: "DateMatch",
     description:
       "Find your perfect match through personality-driven university dating, powered by in-depth personality analysis",
     images: ["/api/og"],
@@ -40,8 +40,8 @@ export const metadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: "/heart-icon.png",
+    apple: "/heart-icon.png",
   },
 };
 
