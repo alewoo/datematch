@@ -9,6 +9,74 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import posthog from "posthog-js";
 
+// Add this new component at the top of the file, after the imports
+function FloatingHearts() {
+  const [dimensions, setDimensions] = useState({ width: 1000, height: 800 });
+
+  useEffect(() => {
+    setDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      {[...Array(10)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute"
+          initial={{
+            opacity: 0.3,
+            scale: 0.5,
+            x: Math.random() * dimensions.width,
+            y: Math.random() * dimensions.height,
+          }}
+          animate={{
+            opacity: [0.3, 0.5, 0.3],
+            scale: [0.5, 1.0, 0.5],
+            x: [
+              Math.random() * dimensions.width,
+              Math.random() * dimensions.width,
+              Math.random() * dimensions.width,
+            ],
+            y: [
+              Math.random() * dimensions.height,
+              Math.random() * dimensions.height,
+              Math.random() * dimensions.height,
+            ],
+          }}
+          transition={{
+            duration: 25 + Math.random() * 15,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        >
+          <Heart
+            className="text-pink-400/40 dark:text-pink-700/40"
+            style={{
+              width: `${35 + Math.random() * 35}px`,
+              height: `${35 + Math.random() * 35}px`,
+              transform: `rotate(${Math.random() * 360}deg)`,
+              filter: "blur(0.5px)",
+            }}
+          />
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
 // Wrap the part that uses useSearchParams in a separate component
 function HomeParams() {
   const searchParams = useSearchParams();
@@ -55,6 +123,7 @@ function HomeContent({ friendMessage }: { friendMessage: string | null }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-red-100 to-purple-100 flex flex-col items-center justify-center p-4">
+      <FloatingHearts />
       <motion.div
         className="absolute top-4 left-4 z-10"
         initial={{ opacity: 0 }}
@@ -133,8 +202,9 @@ function HomeContent({ friendMessage }: { friendMessage: string | null }) {
             transition={{ delay: 0.4 }}
           >
             <Link href="/quiz" passHref>
-              <Button className="bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-4 px-8 rounded-full text-xl transition-all duration-300 hover:scale-105 hover:shadow-xl hover:from-pink-600 hover:to-purple-700">
-                Take the Quiz ✨
+              <Button className="bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-4 px-8 rounded-full text-xl transition-all duration-300 hover:scale-105 hover:shadow-xl hover:from-pink-600 hover:to-purple-700 relative overflow-hidden group">
+                <span className="relative z-10">Take the Quiz ✨</span>
+                <div className="absolute inset-0 w-1/4 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-45deg] group-hover:animate-shine" />
               </Button>
             </Link>
             <p className="mt-4 text-sm text-gray-500">Takes only 2 minutes!</p>
@@ -174,6 +244,8 @@ function HomeContent({ friendMessage }: { friendMessage: string | null }) {
       >
         <Heart className="text-purple-500 h-8 w-8 animate-pulse" />
       </motion.div>
+
+      <div className="fixed inset-0 noise" />
     </div>
   );
 }
