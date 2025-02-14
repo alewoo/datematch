@@ -14,42 +14,74 @@ export async function GET() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "white",
             background:
-              "linear-gradient(to bottom right, #fce7f3, #ffe4e6, #f3e8ff)",
+              "linear-gradient(to bottom right, #fce7f3, #fee2e2, #f3e8ff)",
           }}
         >
           <div
             style={{
               display: "flex",
+              flexDirection: "column",
               alignItems: "center",
-              justifyContent: "center",
-              marginBottom: 40,
+              gap: "24px",
             }}
           >
-            {/* Heart emoji */}
-            <span style={{ fontSize: 100, marginRight: 20 }}>💝</span>
             <div
               style={{
-                fontSize: 60,
-                fontWeight: "bold",
-                background: "linear-gradient(to right, #ec4899, #8b5cf6)",
-                backgroundClip: "text",
-                color: "transparent",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
               }}
             >
-              DateMatch
+              <div
+                style={{
+                  background: "linear-gradient(to right, #ec4899, #8b5cf6)",
+                  width: "48px",
+                  height: "48px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "12px",
+                }}
+              >
+                <span style={{ fontSize: 32 }}>💝</span>
+              </div>
+              <span
+                style={{
+                  fontSize: 48,
+                  fontWeight: "bold",
+                  background: "linear-gradient(to right, #ec4899, #8b5cf6)",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }}
+              >
+                DateMatch
+              </span>
             </div>
-          </div>
-          <div
-            style={{
-              fontSize: 40,
-              textAlign: "center",
-              maxWidth: "80%",
-              color: "#4b5563",
-            }}
-          >
-            Find your perfect match through personality-driven university dating
+
+            <div
+              style={{
+                fontSize: 32,
+                textAlign: "center",
+                maxWidth: "80%",
+                color: "#4b5563",
+                marginTop: "20px",
+              }}
+            >
+              Will You Stay Single Forever?
+            </div>
+
+            <div
+              style={{
+                fontSize: 24,
+                color: "#6b7280",
+                textAlign: "center",
+                marginTop: "12px",
+              }}
+            >
+              Find your perfect match through personality-driven university
+              dating ✨
+            </div>
           </div>
         </div>
       ),
