@@ -12,7 +12,7 @@ interface ShareOptionsProps {
 
 export function ShareOptions({ score, title, message }: ShareOptionsProps) {
   const shareText = `I scored ${score}% on the "Will You Stay Single Forever?" quiz and got "${title}"! ${message}`;
-  const shareUrl = typeof window !== "undefined" ? window.location.origin : "";
+  const shareUrl = "https://datematch.lol";
 
   const shareLinks = [
     {

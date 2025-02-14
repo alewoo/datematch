@@ -67,7 +67,7 @@ function ResultsContent() {
     const shareText = `I got "${title}" on the DateMatch quiz! My top traits are ${topStrengths.join(
       ", "
     )}. Take it yourself:`;
-    const shareUrl = window.location.origin;
+    const shareUrl = "https://datematch.lol";
 
     if (navigator.share) {
       try {
