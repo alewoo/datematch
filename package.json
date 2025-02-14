@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "NODE_OPTIONS=\"--loader ts-node/esm\" npx ts-node --esm scripts/generate-favicons.ts && next build",
+    "build": "next build",
+    "generate-favicons": "cross-env NODE_OPTIONS=\"--loader ts-node/esm\" ts-node --esm scripts/generate-favicons.ts",
+    "postinstall": "npm run generate-favicons",
     "start": "next start",
     "lint": "next lint"
   },
@@ -31,7 +33,8 @@
     "tailwindcss-animate": "^1.0.7",
     "@vercel/og": "latest",
     "ts-node": "^10.9.1",
-    "sharp": "^0.33.5"
+    "sharp": "^0.33.5",
+    "cross-env": "^7.0.3"
   },
   "devDependencies": {
     "@svgr/cli": "^8.1.0",
