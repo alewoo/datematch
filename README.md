@@ -27,55 +27,45 @@ DateMatch is a personality-driven dating platform designed specifically for univ
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 18+ 
 - npm or pnpm
 - Supabase account for database
 
 ### Getting Started
 
 1. Clone the repository
-
 ```
-bash
 git clone https://github.com/yourusername/datematch.git
 cd datematch
+```
 
 2. Install dependencies
 ```
-
 npm install
-
 ```
 
 3. Set up environment variables
 Create a `.env.local` file in the root directory:
 ```
-
 env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-
 ```
 
 4. Generate favicons and icons
 ```
-
 npm run generate-favicon
-
 ```
 
 5. Start the development server
 ```
-
 npm run dev
-
 ```
 
 The app will be available at `http://localhost:3000`
 
 ### Project Structure
 ```
-
 datematch/
 ├── app/ # Next.js app directory
 │ ├── api/ # API routes
@@ -85,7 +75,6 @@ datematch/
 ├── public/ # Static assets
 ├── scripts/ # Build scripts
 └── components/ # UI components
-
 ```
 
 
@@ -104,4 +93,3 @@ datematch/
 ---
 
 Built with ❤️ for university students
-```
