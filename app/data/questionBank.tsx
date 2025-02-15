@@ -1381,22 +1381,22 @@ export const questionBank: Question[] = [
     answers: [
       {
         text: "Never share passwords",
-        traits: { independence: 9, commitment: 4, trust: 6 },
+        traits: { independence: 9, commitment: 4 },
         explanation: "You value digital privacy strongly",
       },
       {
         text: "Share after becoming serious",
-        traits: { commitment: 8, trust: 7, communication: 7 },
+        traits: { commitment: 8, communication: 7 },
         explanation: "You see password sharing as a sign of trust",
       },
       {
         text: "Share for practical purposes only",
-        traits: { flexibility: 7, trust: 6, communication: 8 },
+        traits: { flexibility: 7, communication: 8 },
         explanation: "You're practical about digital sharing",
       },
       {
         text: "Comfortable sharing anytime",
-        traits: { trust: 9, commitment: 8, independence: 4 },
+        traits: { commitment: 8, independence: 4 },
         explanation: "You prioritize openness in relationships",
       },
     ],

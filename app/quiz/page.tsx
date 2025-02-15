@@ -11,17 +11,18 @@ import { Suspense } from "react";
 import { usePostHog } from "posthog-js/react";
 
 function QuizContent() {
+  // Get 12 random questions when component first loads
   const [questions] = useState(() => getRandomQuestions(12));
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<Answer[]>([]);
+  const [currentQuestion, setCurrentQuestion] = useState(0); // Track which question user is currently on
+  const [answers, setAnswers] = useState<Answer[]>([]); // Store all user's answers
   const router = useRouter();
   const posthog = usePostHog();
 
   const handleAnswer = (answer: Answer) => {
-    const newAnswers = [...answers, answer];
+    const newAnswers = [...answers, answer]; // Add new answer to the array
     setAnswers(newAnswers);
 
-    // Track answer in PostHog
+    // Track answer in PostHog analytics
     posthog.capture("quiz_answer", {
       questionNumber: currentQuestion + 1,
       totalQuestions: questions.length,
@@ -29,8 +30,10 @@ function QuizContent() {
     });
 
     if (currentQuestion < questions.length - 1) {
+      // Move to next question
       setCurrentQuestion(currentQuestion + 1);
     } else {
+      // Quiz is complete
       // Calculate personality profile
       const profile = calculatePersonalityProfile(newAnswers);
 
@@ -40,6 +43,7 @@ function QuizContent() {
         profile: profile,
       });
 
+      // go to results page
       router.push(
         `/results?profile=${encodeURIComponent(JSON.stringify(profile))}`
       );
@@ -104,7 +108,6 @@ function calculatePersonalityProfile(answers: Answer[]): PersonalityTraits {
     independence: 5,
     career: 5,
     flexibility: 5,
-    trust: 5, // Add the missing trust property
   };
 
   // Calculate weighted scores based on number of questions per trait
@@ -117,9 +120,9 @@ function calculatePersonalityProfile(answers: Answer[]): PersonalityTraits {
     independence: 0,
     career: 0,
     flexibility: 0,
-    trust: 0, // Add the missing trust property
   };
 
+  // Calculate total scores
   const profile = answers.reduce((acc, answer) => {
     Object.entries(answer.traits).forEach(([trait, value]) => {
       acc[trait as keyof PersonalityTraits] += value;

@@ -461,10 +461,6 @@ function ResultsContent({ profile }: { profile: PersonalityTraits }) {
         score > 6
           ? "You're adaptable in relationship situations"
           : "You have clear preferences and boundaries",
-      trust:
-        score > 6
-          ? "You build trust easily and believe in people's good intentions"
-          : "You take time to develop trust in relationships",
     };
     return descriptions[trait];
   };

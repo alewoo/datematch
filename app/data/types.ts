@@ -9,7 +9,6 @@ export interface PersonalityTraits {
   independence: number; // Level of independence
   career: number; // Career focus and ambition
   flexibility: number;
-  trust: number;
 }
 
 export interface Answer {
