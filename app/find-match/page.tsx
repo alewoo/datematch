@@ -23,14 +23,6 @@ import {
 } from "@/components/ui/dialog";
 import posthog from "posthog-js";
 
-const GEORGIA_UNIVERSITIES = [
-  "Georgia Institute of Technology",
-  "Emory University",
-  "University of Georgia",
-  "Georgia State University",
-  "Other",
-] as const;
-
 function FindMatchParams() {
   const searchParams = useSearchParams();
   return <FindMatchContent searchParams={searchParams} />;
@@ -214,24 +206,19 @@ function FindMatchContent({
               <label className="block text-sm font-medium mb-2">
                 University
               </label>
-              <Select
+              <Input
                 required
+                type="text"
                 value={formData.university}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, university: value })
+                onChange={(e) =>
+                  setFormData({ ...formData, university: e.target.value })
                 }
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select your university" />
-                </SelectTrigger>
-                <SelectContent>
-                  {GEORGIA_UNIVERSITIES.map((uni) => (
-                    <SelectItem key={uni} value={uni}>
-                      {uni}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                className="w-full"
+                placeholder="Enter your university"
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                Current or most recent university attended
+              </p>
             </div>
 
             <div>

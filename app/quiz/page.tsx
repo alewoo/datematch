@@ -104,6 +104,7 @@ function calculatePersonalityProfile(answers: Answer[]): PersonalityTraits {
     independence: 5,
     career: 5,
     flexibility: 5,
+    trust: 5, // Add the missing trust property
   };
 
   // Calculate weighted scores based on number of questions per trait
@@ -116,6 +117,7 @@ function calculatePersonalityProfile(answers: Answer[]): PersonalityTraits {
     independence: 0,
     career: 0,
     flexibility: 0,
+    trust: 0, // Add the missing trust property
   };
 
   const profile = answers.reduce((acc, answer) => {
