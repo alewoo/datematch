@@ -678,7 +678,9 @@ function ResultsContent({ profile }: { profile: PersonalityTraits }) {
               <h3 className="text-xl font-semibold mb-3 text-purple-500">
                 Growth Opportunities
               </h3>
+              '{" "}
               <ul className="space-y-2">
+                '{" "}
                 {getStrengthsAndGrowth(profile).growthAreas.map((area, i) => (
                   <li key={i} className="flex items-center">
                     <span className="text-purple-500 mr-2">•</span>
@@ -743,24 +745,27 @@ function ResultsContent({ profile }: { profile: PersonalityTraits }) {
         >
           <Button
             onClick={shareResult}
-            className="bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white px-8 py-6 rounded-xl flex items-center transition-all duration-300 text-lg"
+            className="group bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white px-8 py-6 rounded-xl flex items-center transition-all duration-300 text-lg hover:shadow-lg hover:shadow-rose-200 hover:-translate-y-1 relative overflow-hidden"
           >
-            <Share2 className="w-6 h-6 mr-3" />
-            Share Results
+            <Share2 className="w-6 h-6 mr-3 group-hover:animate-bounce relative z-10" />
+            <span className="relative z-10">Share Results</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-rose-500 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </Button>
           <Button
             onClick={downloadResultCard}
-            className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-8 py-6 rounded-xl flex items-center transition-all duration-300 text-lg"
+            className="group bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-8 py-6 rounded-xl flex items-center transition-all duration-300 text-lg hover:shadow-lg hover:shadow-pink-200 hover:-translate-y-1 relative overflow-hidden"
           >
-            <Download className="w-6 h-6 mr-3" />
-            Download Card
+            <Download className="w-6 h-6 mr-3 group-hover:animate-bounce relative z-10" />
+            <span className="relative z-10">Download Card</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </Button>
           <Button
             onClick={() => router.push("/find-match")}
-            className="bg-gradient-to-r from-purple-400 to-violet-500 hover:from-purple-500 hover:to-violet-600 text-white px-8 py-6 rounded-xl flex items-center transition-all duration-300 text-lg"
+            className="group bg-gradient-to-r from-purple-400 to-violet-500 hover:from-purple-500 hover:to-violet-600 text-white px-8 py-6 rounded-xl flex items-center transition-all duration-300 text-lg hover:shadow-lg hover:shadow-purple-200 hover:-translate-y-1 relative overflow-hidden"
           >
-            <Heart className="w-6 h-6 mr-3" />
-            Find Your Match
+            <Heart className="w-6 h-6 mr-3 group-hover:animate-bounce relative z-10" />
+            <span className="relative z-10">Find Your Match</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-violet-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </Button>
         </motion.div>
       </div>
